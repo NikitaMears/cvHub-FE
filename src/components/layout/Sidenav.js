@@ -168,7 +168,7 @@ function Sidenav({ color }) {
       </div>
       <hr />
       <Menu theme="light" mode="inline">
-      <Menu.Item className="menu-item-header" key="5">
+      <Menu.Item className="menu-item-header" key="55">
 Document Management        </Menu.Item>
         <Menu.Item key="1">
           <NavLink to="/dashboard">

@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
+
 import {
   Row,
   Col,
@@ -29,7 +31,31 @@ function CvList() {
       .then(data => setCvData(data))
       .catch(error => console.error("Error fetching CVs:", error));
   }, []);
+  const [uploading, setUploading] = useState(false);
 
+  const handleUpload = async ({ file }) => {
+    try {
+      setUploading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await axios.post("http://localhost:3001/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          method: 'POST',
+        },
+      });
+
+      // Handle successful upload
+      message.success(`${file.name} uploaded successfully`);
+    } catch (error) {
+      // Handle upload error
+      message.success(`${file.name} uploaded successfully`);
+      setUploading(false);
+    } finally {
+      setUploading(false);
+    }
+  };
   const getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
@@ -124,11 +150,22 @@ function CvList() {
           </Card>
           <Card bordered={false}>
             <div className="uploadfile pb-15 shadow-none">
-              <Upload>
-                <Button type="dashed" className="ant-full-box" icon={<ToTopOutlined />}>
-                  Click to Upload
-                </Button>
-              </Upload>
+            <Upload
+      name="file"
+      customRequest={handleUpload}
+      beforeUpload={(file) => {
+        // Allow only Excel files
+        const isExcel = file.type === "application/vnd.ms-excel" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        if (!isExcel) {
+          message.error("You can only upload Excel files!");
+        }
+        return isExcel;
+      }}
+    >
+     <Button type="dashed" className="ant-full-box" icon={<ToTopOutlined />} loading={uploading}>
+    Click to Upload
+  </Button>
+    </Upload>
             </div>
           </Card>
         </Col>
