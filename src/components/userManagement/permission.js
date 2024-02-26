@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Row, Col, Button, Table, Modal, Form, Input, message } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Card, Row, Col, Button, Table, Modal,  message } from 'antd';
+import { PlusOutlined,  } from '@ant-design/icons';
 import PermissionForm from './permissionForm';
 
 const Permission = () => {
@@ -74,16 +74,9 @@ const Permission = () => {
     setPermissionModalVisible(true);
   };
 
-  const handleEditPermission = (record) => {
-    setFormData(record);
-    setPermissionModalVisible(true);
-  };
+ 
 
-  const handleDeletePermission = async (permissionId) => {
-    // Implement deletion logic if needed
-    // You can make a DELETE request to the API to delete the permission
-    // Remember to handle loading and error states accordingly
-  };
+
 
   return (
     <div>

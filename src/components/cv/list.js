@@ -10,16 +10,12 @@ import {
   Upload,
   message,
   Button,
-  Avatar,
-  Typography,
   Input,
   Space
 } from "antd";
 import { NavLink } from "react-router-dom";
 import { ToTopOutlined, SearchOutlined } from "@ant-design/icons";
-import face2 from "../../assets/images/face-2.jpg";
 
-const { Title } = Typography;
 const { Search } = Input; // Import the Search component
 
 function CvList() {
@@ -39,7 +35,7 @@ function CvList() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await axios.post("http://localhost:3001/upload", formData, {
+     await axios.post("http://localhost:3001/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           method: 'POST',
@@ -59,16 +55,16 @@ function CvList() {
   const getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
-        <Search
-          placeholder={`Search ${dataIndex}`}
-          allowClear
-          enterButton="Search"
-          size="small"
-          value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onSearch={() => confirm()}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
+      <Search
+  placeholder={`Search ${dataIndex}`}
+  allowClear
+  size="small"
+  value={selectedKeys[0]}
+  onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+  onSearch={() => confirm()}
+  style={{ width: 188, marginBottom: 8, display: 'block' }}
+/>
+
         <Space>
           <Button
             onClick={() => confirm()}

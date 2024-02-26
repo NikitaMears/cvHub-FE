@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Row, Tag, Col, Card, Upload, message, Descriptions, Button } from "antd";
 import { useParams } from "react-router-dom";
-import axios from "axios"; // Import axios for making HTTP requests
-import profilavatar from "../../assets/images/face-1.jpg";
-import { CheckCircleOutlined, BankOutlined, DollarCircleOutlined } from '@ant-design/icons';
+import axios from "axios"; 
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { ToTopOutlined, SearchOutlined } from "@ant-design/icons";
+import { ToTopOutlined } from "@ant-design/icons";
 
 function CvDetail() {
   const [cvData, setCvData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
-  const { id } = useParams(); // Get the ID parameter from the URL
+  const { id } = useParams(); 
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:3001/cvs/${id}`) // Fetch data for the dynamic ID
+    fetch(`http://localhost:3001/cvs/${id}`) 
       .then((response) => response.json())
       .then((data) => {
         setCvData(data);
@@ -32,17 +30,17 @@ function CvDetail() {
     setFileList([file]);
     return false; // Returning false prevents default upload behavior
   };
-  const renderFilePreview = () => {
-    if (cvData && cvData.cv && cvData.cv !== "N/A") {
-      return (
-        <Button type="link" href={`http://localhost:3001/${cvData.cv}`} target="_blank">
-          View CV
-        </Button>
-      );
-    } else {
-      return <p>No CV available</p>;
-    }
-  };
+  // const renderFilePreview = () => {
+  //   if (cvData && cvData.cv && cvData.cv !== "N/A") {
+  //     return (
+  //       <Button type="link" href={`http://localhost:3001/${cvData.cv}`} target="_blank">
+  //         View CV
+  //       </Button>
+  //     );
+  //   } else {
+  //     return <p>No CV available</p>;
+  //   }
+  // };
   const handleUpload = () => {
     const formData = new FormData();
     formData.append("file", fileList[0]);
@@ -110,60 +108,6 @@ function CvDetail() {
   
     </div>
   </Col>
-  {/* <Col span={24} md={12} className="mb-24">
-    <Card bordered={false} className="header-solid h-full">
-      {cvData && cvData.cv && (
-        <>
-          <h4>CV Preview:</h4>
-          <iframe src={`http://localhost:3001/${cvData.cv}`} style={{ width: "100%", height: "400px" }}></iframe>
-        </>
-      )}
-      <div className="mt-4">
-        <Upload
-          beforeUpload={beforeUpload}
-          fileList={fileList}
-          maxCount={1}
-          accept=".docx,.pdf"
-        >
-          <Button type="dashed" className="ant-full-box" icon={<ToTopOutlined />} >Upload File</Button>
-        </Upload>
-        <Button onClick={handleUpload} hidden={!fileList.length}>Submit</Button>
-      </div>
-    </Card>
-  </Col> */}
-
-{/* <Col span={24} md={12} className="mb-24">
-  <Card bordered={false} className="header-solid h-full">
-    {cvData && cvData.cv && (
-      <>
-        <h4>CV Preview:</h4>
-        {cvData.cv.endsWith('.pdf') ? (
-          // If PDF file, render the iframe for preview
-          <iframe src={`http://localhost:3001/${cvData.cv}`} style={{ width: "100%", height: "400px" }}></iframe>
-        ) : cvData.cv.endsWith('.docx') ? (
-          // If DOCX file, render the Google Docs viewer for preview
-          <iframe src={`https://docs.google.com/viewer?url=http://localhost:3001/${cvData.cv}&embedded=true`} style={{ width: "100%", height: "400px" }}></iframe>
-        ) : (
-          // If other file formats, display a message or handle accordingly
-          <p>Unsupported file format</p>
-        )}
-      </>
-    )}
-    <div className="mt-4">
-      <Upload
-        beforeUpload={beforeUpload}
-        fileList={fileList}
-        maxCount={1}
-        accept=".docx,.pdf"
-      >
-        <Button type="dashed" className="ant-full-box" icon={<ToTopOutlined />} >
-          Upload File
-        </Button>
-      </Upload>
-      <Button onClick={handleUpload} hidden={!fileList.length}>Submit</Button>
-    </div>
-  </Card>
-</Col> */}
 
 <Col span={24} md={12} className="mb-24">
   <Card bordered={false} className="header-solid h-full">
@@ -172,7 +116,7 @@ function CvDetail() {
         <h4>CV Preview:</h4>
         {cvData.cv.endsWith('.pdf') ? (
           // If PDF file, render the iframe for preview
-          <iframe src={`http://localhost:3001/${cvData.cv}`} style={{ width: "100%", height: "400px" }}></iframe>
+          <iframe title="No CV" src={`http://localhost:3001/${cvData.cv}`} style={{ width: "100%", height: "400px" }}></iframe>
         ) : cvData.cv.endsWith('.docx') ? (
           // If DOCX file, render using Google Docs viewer for preview
           <div style={{ width: "100%", height: "400px" }}>
@@ -203,23 +147,7 @@ function CvDetail() {
 
 
 
-  {/* Tags */}
-  {/* <Col span={24} md={12} className="mb-24">
-    <div style={{ height: "100%" }}>
-      <Card bordered={false} className="header-solid h-full">
-        <div style={{ marginTop: 16 }}>
-          <h6 className="list-header text-sm text-muted">Tags</h6>
-          <div>
-            <Tag color="#52c41a">Available</Tag>
-            <Tag color="#1890ff">{cvData && cvData.researchInterest}</Tag>
-            <Tag color="#faad14">{cvData && cvData.priceAverage}</Tag>
-          </div>
-        </div>
-      </Card>
-    </div>
-  </Col> */}
-
-  {/* CV Preview */}
+ 
 
 </Row>
 

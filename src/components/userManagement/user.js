@@ -16,6 +16,10 @@ const User = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('Token not found');
+        }
         const response = await fetch('http://localhost:3001/users', {
           headers: {
             'Authorization': `Bearer ${token}`,

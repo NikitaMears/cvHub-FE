@@ -12,8 +12,7 @@ import {
   message
 } from "antd";
 import signinbg from "../../assets/images/img-signin.jpg";
-import fr from "../../assets/images/fr.png"
-import axios from "axios";
+
 
 const { Title } = Typography;
 const { Header, Footer, Content } = Layout;
@@ -33,6 +32,8 @@ class Login extends Component {
       const data = await response.json();
       if (response.ok) {
         // Store token and permissions in local storage
+        message.success("Logged In Successfully!");
+
         localStorage.setItem('token', data.token);
         const permissions = data.userData.Role.Permissions.map(permission => permission.name);
         localStorage.setItem('permissions', JSON.stringify(permissions));
@@ -40,6 +41,8 @@ class Login extends Component {
         this.props.history.push('/dashboard');
       } else {
         // Handle error response, if any
+        message.error("Invalid Credentials!");
+
         console.error('Login failed:', data.message);
       }
     } catch (error) {

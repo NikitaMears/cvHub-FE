@@ -45,6 +45,7 @@ const RoleForm = ({ formData, setFormData, onClose }) => {
 
   
   const handleSaveRole = async (values) => {
+    console.log("values", values)
     try {
       const token = localStorage.getItem('token');
       if (!token) {

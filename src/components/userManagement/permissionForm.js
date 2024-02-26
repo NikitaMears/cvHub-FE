@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Row, Col, Button, Table, Modal, Form, Input } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import React, {  useEffect } from 'react';
+import {  Button, Form, Input } from 'antd';
 
 const PermissionForm = ({ formData, setFormData }) => {
     const [form] = Form.useForm();
@@ -10,8 +9,7 @@ const PermissionForm = ({ formData, setFormData }) => {
     }, [formData, form]);
   
     const handleSavePermission = () => {
-      // Implement save/update logic and update permissionData state
-      // Example: savePermission(formData).then(() => setPermissionModalVisible(false));
+    
     };
   
     return (
