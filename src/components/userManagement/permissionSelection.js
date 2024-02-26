@@ -6,14 +6,14 @@ const PermissionSelection = ({ permissions, selectedPermissions, onChange }) => 
     return null; // or you can return a loading indicator or an error message
   }
 
-  const handleCheckboxChange = (permissionId) => {
-    const index = selectedPermissions.indexOf(permissionId);
-    if (index === -1) {
-      onChange([...selectedPermissions, permissionId]);
-    } else {
-      onChange(selectedPermissions.filter((id) => id !== permissionId));
-    }
-  };
+  // const handleCheckboxChange = (permissionId) => {
+  //   const index = selectedPermissions.indexOf(permissionId);
+  //   if (index === -1) {
+  //     onChange([...selectedPermissions, permissionId]);
+  //   } else {
+  //     onChange(selectedPermissions.filter((id) => id !== permissionId));
+  //   }
+  // };
 
   return (
     <Checkbox.Group

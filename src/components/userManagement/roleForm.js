@@ -20,16 +20,17 @@ const RoleForm = ({ formData, setFormData, onClose }) => {
       if (!token) {
         throw new Error('Token not found');
       }
-      let method = 'POST';
-      let url = 'roles';
-      if (formData.id) {
-        url = `roles/${formData.id}`;
-        method = 'PUT';
-      }
+      // let method = 'POST';
+      // let url = 'roles';
+      // if (formData.id) {
+      //   url = `roles/${formData.id}`;
+      //   method = 'PUT';
+      // }
       const responseData = formData.id ? await putData(values, formData.id) : await postData(values);
         message.success('Role saved successfully');
         setFormData({});
         onClose(); // Close the modal
+        console.log(responseData)
     
     } catch (error) {
       console.error('Error saving role:', error);

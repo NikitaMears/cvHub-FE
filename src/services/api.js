@@ -7,6 +7,7 @@ const useFetchWithToken = (endpoint) => {
   const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem('token');
+  const apiUrl = process.env.API_URL || 'http://localhost:3001'; 
 
   const fetchData = async () => {
     try {
@@ -14,7 +15,7 @@ const useFetchWithToken = (endpoint) => {
       if (!token) {
         throw new Error('Token not found');
       }
-      const response = await axios.get(`http://localhost:3001/${endpoint}`, {
+      const response = await axios.get(`${apiUrl}/${endpoint}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -36,7 +37,7 @@ const useFetchWithToken = (endpoint) => {
       if (!token) {
         throw new Error('Token not found');
       }
-      const response = await axios.post(`http://localhost:3001/${endpoint}`, postData, {
+      const response = await axios.post(`${apiUrl}/${endpoint}`, postData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -48,12 +49,32 @@ const useFetchWithToken = (endpoint) => {
     }
   };
 
+  const postFormData = async (formData, endpoint) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token not found');
+      }
+      
+      const response = await axios.post(`${apiUrl}/${endpoint}`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      return response.data;
+    } catch (error) {
+      throw new Error(error.message || 'Failed to upload data');
+    }
+  };
+  
   const putData = async (putData, urlParam) => {
     try {
       if (!token) {
         throw new Error('Token not found');
       }
-      const response = await axios.put(`http://localhost:3001/${endpoint}/${urlParam}`, putData, {
+      const response = await axios.put(`${apiUrl}/${endpoint}/${urlParam}`, putData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -70,7 +91,7 @@ const useFetchWithToken = (endpoint) => {
       if (!token) {
         throw new Error('Token not found');
       }
-      const response = await axios.delete(`http://localhost:3001/${endpoint}/${urlParam}`, {
+      const response = await axios.delete(`${apiUrl}/${endpoint}/${urlParam}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -81,7 +102,7 @@ const useFetchWithToken = (endpoint) => {
     }
   };
 
-  return { data, error, loading, postData, putData, deleteData };
+  return { data, error, loading, postData, putData, deleteData, postFormData };
 };
 
 export default useFetchWithToken;
