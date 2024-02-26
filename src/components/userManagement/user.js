@@ -1,39 +1,14 @@
 // User.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, Row, Col, Button, Table, Modal } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import UserForm from './userForm';
+import useFetchWithToken from '../../services/api';
 
 const User = () => {
   const [userModalVisible, setUserModalVisible] = useState(false);
   const [formData, setFormData] = useState({});
-  const [userData, setUserData] = useState([]);
-  const token = localStorage.getItem('token');
-  if (!token) {
-    throw new Error('Token not found');
-  }
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          throw new Error('Token not found');
-        }
-        const response = await fetch('http://localhost:3001/users', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-        const data = await response.json();
-        setUserData(data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
+  const { data: userData, loading, error, refetchData } = useFetchWithToken('users');
 
   const handleAddUser = () => {
     setFormData({});
@@ -56,16 +31,15 @@ const User = () => {
   const userColumns = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
     { title: 'First Name', dataIndex: 'firstName', key: 'firstName' },
-    { title: 'Last Name', dataIndex: 'lastName', key: 'firstName' },
-
+    { title: 'Last Name', dataIndex: 'lastName', key: 'lastName' },
     { title: 'Email', dataIndex: 'email', key: 'email' },
     { title: 'Phone', dataIndex: 'phoneNumber', key: 'phoneNumber' },
-
     { 
       title: 'Role', 
-      dataIndex: ['Role', 'name'], // Update dataIndex to point to the nested property
+      dataIndex: ['Role', 'name'],
       key: 'role' 
-    },    {
+    },    
+    {
       title: 'Actions',
       key: 'actions',
       render: (_, record) => (
@@ -100,20 +74,27 @@ const User = () => {
             </Button>
           </Col>
           <Col span={24}>
-            <Table dataSource={userData} columns={userColumns}   pagination={{ pageSize: 5 }}
- />
+            {error && <div>Error: {error}</div>}
+            {loading ? (
+              <div>Loading...</div>
+            ) : (
+              <Table dataSource={userData} columns={userColumns} pagination={{ pageSize: 5 }} />
+            )}
           </Col>
         </Row>
       </Card>
 
       <Modal
-        title={formData.id ? 'Edit User' : 'Add User'}
-        visible={userModalVisible}
-        onCancel={() => setUserModalVisible(false)}
-        footer={null}
-      >
-        <UserForm formData={formData} setFormData={setFormData} closeModal={closeModal} />
-      </Modal>
+  title={formData.id ? 'Edit User' : 'Add User'}
+  visible={userModalVisible}
+  onCancel={() => setUserModalVisible(false)}
+  footer={null}
+>
+  {/* Make sure refetchData is passed as a prop */}
+  <UserForm formData={formData} setFormData={setFormData} closeModal={closeModal} refetchData={refetchData} />
+</Modal>
+
+
     </div>
   );
 };

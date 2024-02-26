@@ -1,105 +1,50 @@
-// UserForm.js
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Select } from 'antd';
 import Password from 'antd/lib/input/Password';
+import useFetchWithToken from '../../services/api';
 
 const { Option } = Select;
 
 const UserForm = ({ formData, setFormData, closeModal }) => {
   const [form] = Form.useForm();
-  const [roles, setRoles] = useState([]);
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('Token not found');
-    }
-    // Fetch roles from localhost:3001/roles
-    fetch('http://localhost:3001/roles',
-    { method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },})
-      .then((response) => response.json())
-      .then((data) => {
-        setRoles(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching roles:', error);
-      });
-  }, []);
-  // const onFinish = (values) => {
-  //   // Handle form submission (add/edit logic)
-  //   console.log('Received values:', values);
-  //   const token = localStorage.getItem('token');
-  //   if (!token) {
-  //     throw new Error('Token not found');
-  //   }
-  //   // Make a POST request to submit the form data
-  //   fetch('http://localhost:3001/users', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Authorization': `Bearer ${token}`,
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(values),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log('Success:', data);
-  //       // Close the modal or handle success as needed
-  //       setFormData({});
-  //       closeModal(); // Close the modal after saving
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error:', error);
-  //       // Handle error as needed
-  //     });
-  // };
+  const { data: roles, loading: rolesLoading, error: rolesError } = useFetchWithToken('roles');
+  const { postData, putData } = useFetchWithToken('users');
+  const [submitted, setSubmitted] = useState(false); // State to trigger refetch
 
-
-  const onFinish = (values) => {
-    // Handle form submission (add/edit logic)
-    console.log('Received values:', values);
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('Token not found');
-    }
-    let url = 'http://localhost:3001/users';
-    let method = 'POST'; // Default to POST method for new user creation
-  
-    // Check if formData contains an ID (indicating editing an existing user)
-    if (formData && formData.id) {
-      url += `/${formData.id}`; // Append the ID to the URL
-      method = 'PUT'; // Change method to PUT for updating existing user
-    }
-  
-    // Make a POST or PUT request to submit the form data
-    fetch(url, {
-      method: method, // Use the determined method
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Success:', data);
-        // Close the modal or handle success as needed
-        setFormData({});
-        closeModal(); // Close the modal after saving
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        // Handle error as needed
-      });
-  };
-  
   useEffect(() => {
-    // Set form data when formData changes
     form.setFieldsValue(formData);
   }, [formData, form]);
+
+  const onFinish = async (values) => {
+    try {
+      if (formData.id) {
+        await putData(values, formData.id);
+      } else {
+        await postData(values);
+      }
+      setFormData({});
+      closeModal();
+      setSubmitted(true); // Trigger refetch after successful form submission
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (submitted) {
+      setSubmitted(false); // Reset submitted state
+      // Refetch data here
+      // You may fetch data again using the same method you use in the User component
+    }
+  }, [submitted]);
+
+  if (rolesError) {
+    return <div>Error: {rolesError}</div>;
+  }
+
+  if (rolesLoading) {
+    return <div>Loading roles...</div>;
+  }
 
   return (
     <Form form={form} onFinish={onFinish} layout="vertical">
@@ -118,13 +63,14 @@ const UserForm = ({ formData, setFormData, closeModal }) => {
       <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please enter a Password' }]}>
         <Password />
       </Form.Item>
-      <Form.Item label="Role" name="RoleId" rules={[{ required: true, message: 'Please select a Role' }]}>
-        <Select>
-          {roles.map(role => (
-            <Option key={role.id} value={role.id}>{role.name}</Option>
-          ))}
-        </Select>
-      </Form.Item>
+  <Form.Item label="Role" name="RoleId" rules={[{ required: true, message: 'Please select a Role' }]}>
+  <Select>
+    {roles && roles.map(role => (
+      <Option key={role.id} value={role.id}>{role.name}</Option>
+    ))}
+  </Select>
+  </Form.Item>
+  
       <Form.Item label="Status" name="status" rules={[{ required: true, message: 'Please select a Status' }]}>
         <Select>
           <Option value="Active">Active</Option>
@@ -141,3 +87,4 @@ const UserForm = ({ formData, setFormData, closeModal }) => {
 };
 
 export default UserForm;
+
