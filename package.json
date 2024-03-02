@@ -6,7 +6,10 @@
   "dependencies": {
     "@ant-design/icons": "^4.8.1",
     "@cyntler/react-doc-viewer": "^1.14.1",
+    "@emotion/react": "^11.11.4",
     "@material-ui/icons": "^4.11.3",
+    "@mui/lab": "^5.0.0-alpha.166",
+    "@mui/material": "^5.15.11",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",

@@ -7,7 +7,7 @@ const { Option } = Select;
 
 const RFPForm = ({ formData, setFormData, closeModal, refetchData }) => {
   const [form] = Form.useForm();
-  const { data: roles, loading: rolesLoading, error: rolesError } = useFetchWithToken('roles');
+  // const { data: roles, loading: rolesLoading, error: rolesError } = useFetchWithToken('roles');
   const { postData, putData, postFormData } = useFetchWithToken('rfps');
   const [submitted, setSubmitted] = useState(false); // State to trigger refetch
 
@@ -42,13 +42,7 @@ const RFPForm = ({ formData, setFormData, closeModal, refetchData }) => {
     }
   }, [submitted]);
 
-  if (rolesError) {
-    return <div>Error: {rolesError}</div>;
-  }
 
-  if (rolesLoading) {
-    return <div>Loading roles...</div>;
-  }
 
   return (
     <Form form={form} onFinish={onFinish} layout="vertical">

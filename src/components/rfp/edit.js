@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, DatePicker, Row, Col, Select } from 'antd';
 import moment from 'moment';
-
+import useFetchWithToken from '../../services/api';
+import { message } from 'antd';
+import { useHistory } from 'react-router-dom';
 const { Option } = Select;
 
 const EditRFPForm = ({ formData, setFormData, closeModal, refetchData }) => {
   const [form] = Form.useForm();
+  const history = useHistory();
+
   const [submitted, setSubmitted] = useState(false);
+  const { postData, putData, postFormData } = useFetchWithToken('rfps');
+
+console.log("fo", formData)
+  // useEffect(() => {
+  //   form.setFieldValue({
+  //     ...formData,
+  //     issuedOn: moment(formData.issuedOn) // Convert to moment object for DatePicker
+  //   });
+  // }, [formData, form]);
 
   useEffect(() => {
     form.setFieldsValue({
       ...formData,
-      issuedOn: moment(formData.issuedOn) // Convert to moment object for DatePicker
+      issuedOn: moment(formData.issuedOn)
     });
   }, [formData, form]);
 
@@ -19,9 +32,18 @@ const EditRFPForm = ({ formData, setFormData, closeModal, refetchData }) => {
     try {
       // Update the existing RFP data
       // You should implement the update functionality according to your API
-      console.log('Updated RFP data:', values);
+      const formDataWithFile = { ...values, file: values.file?.file || formData.file };
+
+      await putData(formDataWithFile, formData.id);
       closeModal();
-      setSubmitted(true);
+
+      message.success('RFP updated successfully');
+      console.log('Updated RFP data:', values);
+
+      // Redirect to /rfps upon successful update
+      history.push('/rfp');
+
+      console.log('Updated RFP data:', values);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -79,14 +101,7 @@ const EditRFPForm = ({ formData, setFormData, closeModal, refetchData }) => {
             <Input.TextArea />
           </Form.Item>
         </Col>
-        <Col span={12}>
-          <Form.Item label="Status" name="status" rules={[{ required: true, message: 'Please select a Status' }]}>
-            <Select>
-              <Option value="pending">Pending</Option>
-              <Option value="completed">Completed</Option>
-            </Select>
-          </Form.Item>
-        </Col>
+       
       </Row>
       <Form.Item>
         <Button type="primary" htmlType="submit">
