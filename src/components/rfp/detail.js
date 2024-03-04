@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Upload, message, Descriptions, Button, Tag } from "antd";
+import { Row, Col, Card, Upload, message, Descriptions, Button, Tag , Tabs} from "antd";
 import { useParams } from "react-router-dom";
 import { ToTopOutlined } from '@ant-design/icons';
 import useFetchWithToken from '../../services/api'; // Import the useFetchWithToken hook
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import CvList from "./cvs";
+const { TabPane } = Tabs;
 
 function RFPDetail() {
   const [fileList, setFileList] = useState([]);
@@ -47,6 +49,9 @@ function RFPDetail() {
   return (
     <>
       {/* RFP Information */}
+      
+      <Tabs defaultActiveKey="1">
+        <TabPane tab="General Information" key="1">
       <Row gutter={[24, 0]}>
         <Col span={24} md={12} className="mb-24">
           <Card
@@ -68,13 +73,16 @@ function RFPDetail() {
               <Descriptions.Item label="Issued On" span={3}>
                 {rfpData.issuedOn}
               </Descriptions.Item>
+              <Descriptions.Item label="Sector" span={3}>
+                {rfpData.sector}
+              </Descriptions.Item>
             </Descriptions>
           </Card>
         </Col>
         {/* Upload RFP */}
         <Col span={24} md={12} className="mb-24">
           <Card bordered={false} className="header-solid h-full">
-            <h4>CV Preview:</h4>
+            <h4>RFP Preview:</h4>
             {rfpData.file.endsWith('.pdf') ? (
               // If PDF file, render the iframe for preview
 <iframe title="No CV" src={`http://localhost:3001/${rfpData.file}`} style={{ width: "100%", height: "400px" }}></iframe>
@@ -143,6 +151,14 @@ function RFPDetail() {
           </Card>
         </Col>
       </Row>
+      </TabPane>
+        <TabPane tab="Available Experts" key="2">
+        <CvList  rfpId={id} />
+        </TabPane>
+        <TabPane tab="Technical Proposal" key="3">
+          {/* Content for Technical Proposal tab */}
+        </TabPane>
+      </Tabs>
     </>
   );
 }

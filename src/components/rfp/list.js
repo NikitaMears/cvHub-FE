@@ -140,13 +140,14 @@ console.log(editMode)
   return (
     <div className="tabled">
       <Row gutter={[24, 0]}>
-        <Col span={12}>
+       
+        <Col xs={24} xl={24}>
+          <Card>
+          <Col span={12}>
           <NavLink to="#" onClick={handleAddRFP} className="ant-btn ant-btn-primary" role="button">
            Add RFP
           </NavLink>
         </Col>
-        <Col xs={24} xl={24}>
-          <Card>
             <div className="table-responsive">
               <Table columns={columns} dataSource={rfpData} pagination={{ pageSize: 5 }} className="ant-border-space" />
             </div>

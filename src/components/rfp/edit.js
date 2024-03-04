@@ -12,7 +12,13 @@ const EditRFPForm = ({ formData, setFormData, closeModal, refetchData }) => {
 
   const [submitted, setSubmitted] = useState(false);
   const { postData, putData, postFormData } = useFetchWithToken('rfps');
+  const [selectedSector, setSelectedSector] = useState('');
 
+  const handleSectorChange = (value) => {
+    setSelectedSector(value);
+    // You can perform any additional actions based on the selected sector here
+    console.log('Selected sector:', value);
+  };
 console.log("fo", formData)
   // useEffect(() => {
   //   form.setFieldValue({
@@ -90,13 +96,33 @@ console.log("fo", formData)
           </Form.Item>
         </Col>
         <Col span={12}>
+        <Form.Item label="Sector" name="sector" rules={[{ required: true, message: 'Please select a Sector' }]}>
+          <Select onChange={handleSectorChange}>
+            <Option value="Agriculture">Agriculture</Option>
+            <Option value="Healthcare">Healthcare</Option>
+            <Option value="Education">Education</Option>
+            <Option value="Finance">Finance</Option>
+            <Option value="Technology">Technology</Option>
+            <Option value="Construction">Construction</Option>
+            <Option value="Energy">Energy</Option>
+            <Option value="Transportation">Transportation</Option>
+            <Option value="Environment">Environment</Option>
+            <Option value="Government">Government</Option>
+            <Option value="Other">Other</Option>
+          </Select>
+        </Form.Item>
+      </Col>
+       
+      </Row>
+      <Row  gutter={16}>
+      <Col span={24}>
           <Form.Item label="Objectives" name="objectives" rules={[{ required: true, message: 'Please enter Objectives' }]}>
             <Input.TextArea />
           </Form.Item>
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col span={12}>
+        <Col span={24}>
           <Form.Item label="Specific Objectives" name="specificObjectives" rules={[{ required: true, message: 'Please enter Specific Objectives' }]}>
             <Input.TextArea />
           </Form.Item>

@@ -141,6 +141,19 @@ Document Management        </Menu.Item>
             <span className="label">RFP</span>
           </NavLink>
         </Menu.Item>
+        <Menu.Item key="5063">
+          <NavLink to="/project">
+            <span
+              className="icon"
+              style={{
+                background: page === "tables" ? color : "",
+              }}
+            >
+              {tables}
+            </span>
+            <span className="label">Projects</span>
+          </NavLink>
+        </Menu.Item>
 
         <Menu.Item key="19">
           <NavLink to="/tp">

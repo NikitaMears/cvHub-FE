@@ -24,6 +24,7 @@ import RFPList from "./components/rfp/list";
 import RFPDetail from "./components/rfp/detail";
 import TpList from "./components/tp/list";
 import TpDetail from "./components/tp/detail";
+import Project from "./components/project/project";
 
 import User from "./components/userManagement/user";
 import Permission from "./components/userManagement/permission";
@@ -52,6 +53,8 @@ function App() {
           <Route exact path="/cv" component={CvList} />
           <Route exact path="/cvDetails/:id" component={CvDetail} />
           <Route exact path="/rfp" component={RFPList} />
+          <Route exact path="/project" component={Project} />
+
           <Route exact path="/rfpDetails/:id" component={RFPDetail} />
           <Route exact path="/tp" component={TpList} />
           <Route exact path="/tpDetails" component={TpDetail} />
