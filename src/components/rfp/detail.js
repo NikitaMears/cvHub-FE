@@ -5,6 +5,7 @@ import { ToTopOutlined } from '@ant-design/icons';
 import useFetchWithToken from '../../services/api'; // Import the useFetchWithToken hook
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import CvList from "./cvs";
+import TpDetail from "../tp/detail";
 const { TabPane } = Tabs;
 
 function RFPDetail() {
@@ -156,7 +157,7 @@ function RFPDetail() {
         <CvList  rfpId={id} />
         </TabPane>
         <TabPane tab="Technical Proposal" key="3">
-          {/* Content for Technical Proposal tab */}
+        <TpDetail  rfpId={id} />
         </TabPane>
       </Tabs>
     </>

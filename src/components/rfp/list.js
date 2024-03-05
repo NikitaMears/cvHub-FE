@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Card, Upload, message, Input, Row, Col, Modal, Button } from "antd";
 import { NavLink } from "react-router-dom";
-import { ToTopOutlined, SearchOutlined } from "@ant-design/icons";
+import { ToTopOutlined, SearchOutlined , EditOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import useFetchWithToken from "../../services/api";
 import RFPForm from "./create";
 import EditRFPForm from "./edit";
@@ -126,14 +126,19 @@ console.log(editMode)
       title: "Action",
       key: "action",
       render: (text, record) => (
-        <Button type="link" onClick={() => handleEdit(record)}>Edit</Button>
+        <Button type="link"             icon={<EditOutlined />}
+        onClick={() => handleEdit(record)}>Edit</Button>
       )
     },
     {
-      title: "More",
-      key: "more",
-      dataIndex: "id",
-      render: (text, record) => <NavLink to={`/rfpDetails/${record.id}`}>Details</NavLink>
+      title: 'More',
+      key: 'more',
+      dataIndex: 'id',
+      render: (text, record) => (
+        <NavLink to={`/rfpDetails/${record.id}`} style={{ color: 'green' }}>
+          <InfoCircleOutlined /> &nbsp;Details
+        </NavLink>
+      ),
     }
   ];
 

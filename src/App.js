@@ -57,7 +57,7 @@ function App() {
 
           <Route exact path="/rfpDetails/:id" component={RFPDetail} />
           <Route exact path="/tp" component={TpList} />
-          <Route exact path="/tpDetails" component={TpDetail} />
+          <Route exact path="/tpDetails/:id" component={TpDetail} />
           <Route exact path="/users" component={User} />
 
           <Route exact path="/roles" component={Role} />

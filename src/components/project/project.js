@@ -38,7 +38,7 @@ const Project = () => {
       render: (_, record) => (
         <>
           <Button
-            type="primary"
+            type="link"
             icon={<EditOutlined />}
             onClick={() => handleEditProject(record)}
             style={{ marginRight: 8 }}
@@ -46,7 +46,8 @@ const Project = () => {
             Edit
           </Button>
           <Button
-            type="danger"
+            type="link"
+            danger
             icon={<DeleteOutlined />}
             onClick={() => handleDeleteProject(record.id)}
           >
@@ -63,7 +64,7 @@ const Project = () => {
         <Row gutter={[16, 16]}>
           <Col span={12}>
             <Button type="primary" icon={<PlusOutlined />} onClick={handleAddProject}>
-              Add Project
+              Add Firm Experience
             </Button>
           </Col>
           <Col span={24}>
@@ -78,7 +79,7 @@ const Project = () => {
       </Card>
 
       <Modal
-        title={formData.id ? 'Edit Project' : 'Add Project'}
+        title={formData.id ? 'Edit Firm Experience' : 'Add Firm Experience'}
         visible={projectModalVisible}
         onCancel={() => setProjectModalVisible(false)}
         footer={null}

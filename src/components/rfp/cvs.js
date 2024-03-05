@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { List, Card, Typography } from 'antd';
+import { Table, Typography } from 'antd';
 import { NavLink } from "react-router-dom";
 
-const { Meta } = Card;
 const { Text } = Typography;
 
 const CvList = ({rfpId}) => {
   const [cvs, setCvs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,6 +21,7 @@ const CvList = ({rfpId}) => {
         const data = await response.json();
         setCvs(data);
         setLoading(false);
+        setPagination(prevState => ({ ...prevState, total: data.length }));
       } catch (error) {
         console.error('Error fetching data:', error);
         setLoading(false);
@@ -24,44 +29,62 @@ const CvList = ({rfpId}) => {
     };
 
     fetchData();
-  }, []);
+  }, [rfpId]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const handleTableChange = (pagination) => {
+    setPagination(pagination);
+  };
+
+  const columns = [
+    {
+      title: 'Expert Name',
+      dataIndex: 'expertName',
+      key: 'expertName',
+    },
+    {
+      title: 'Serial Number',
+      dataIndex: 'serialNumber',
+      key: 'serialNumber',
+    },
+    {
+      title: 'Country',
+      dataIndex: 'country',
+      key: 'country',
+    },
+    {
+      title: 'Research Interest',
+      dataIndex: 'researchInterest',
+      key: 'researchInterest',
+    },
+ 
+
+    {
+      title: 'Price Average',
+      dataIndex: 'priceAverage',
+      key: 'priceAverage',
+    },
+    {
+      title: 'Average Score',
+      dataIndex: 'averagePoints',
+      key: 'averagePoints',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <NavLink to={`/cvDetails/${record.id}`}>Details</NavLink>
+      ),
+    },
+  ];
 
   return (
-    <List
-      grid={{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4 }}
+    <Table
+      columns={columns}
       dataSource={cvs}
-      renderItem={cv => (
-        <List.Item>
-          <Card>
-            <Meta
-              title={<Text strong>{cv.expertName}</Text>}
-              description={
-                <div>
-                  <Text type="secondary">Serial Number: {cv.serialNumber}</Text>
-                  <br />
-                  <Text type="secondary">Country: {cv.country}</Text>
-                  <br />
-                  <Text type="secondary">Research Interest: {cv.researchInterest}</Text>
-                  <br />
-                  <Text type="secondary">CV: {cv.cv}</Text>
-                  <br />
-                  <Text type="secondary">Contact Information: {cv.contactInformation}</Text>
-                  <br />
-                  <Text type="secondary">Price Average: {cv.priceAverage}</Text>
-                  <br />
-                  <Text type="secondary">Average Score: {cv.averagePoints}</Text>
-                  <br />
-                  <NavLink to={`/cvDetails/${cv.id}`}>Details</NavLink>
-                </div>
-              }
-            />
-          </Card>
-        </List.Item>
-      )}
+      rowKey="id"
+      pagination={pagination}
+      loading={loading}
+      onChange={handleTableChange}
     />
   );
 };
