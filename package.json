@@ -1,19 +1,28 @@
 {
   "name": "muse-ant-design-dashboard",
+  "proxy": "http://localhost:3000",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.8.1",
+    "@cyntler/react-doc-viewer": "^1.14.1",
+    "@emotion/react": "^11.11.4",
     "@material-ui/icons": "^4.11.3",
+    "@mui/lab": "^5.0.0-alpha.166",
+    "@mui/material": "^5.15.11",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "antd": "^4.16.6",
     "apexcharts": "^3.27.1",
     "axios": "^1.6.7",
+    "docx": "^8.5.0",
     "install": "^0.13.0",
     "react": "^17.0.2",
     "react-apexcharts": "^1.3.9",
+    "react-doc-renderer": "^0.1.25",
+    "react-doc-viewer": "^0.1.5",
+    "react-docx": "^1.0.1",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
@@ -32,16 +41,9 @@
       "react-app/jest"
     ]
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ]
 }

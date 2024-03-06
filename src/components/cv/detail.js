@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { Avatar } from 'antd';
 import { UserOutlined, ToTopOutlined } from '@ant-design/icons';
 import useFetchWithToken from '../../services/api'; // Import the useFetchWithToken hook
+import CvProjects from './cvProjects'; // Import the CvProjects component
 
 function CvDetail() {
   const [fileList, setFileList] = useState([]);
@@ -60,6 +61,9 @@ function CvDetail() {
                     </Descriptions.Item>
                     <Descriptions.Item label="Location" span={3}>
                       {cvData && cvData.country}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Average Score" span={3}>
+                      {cvData && cvData.averagePoints}
                     </Descriptions.Item>
                   </Descriptions>
                   {/* Tags */}
@@ -122,6 +126,19 @@ function CvDetail() {
               </Card>
             </Col>
           </Row>
+          <Row gutter={[24, 0]}>
+        <Col span={24} md={24} className="mb-24">
+          <Card
+            bordered={false}
+            title={<h6 className="font-semibold m-0">Associated Projects</h6>}
+            className="header-solid h-full"
+            bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
+          >
+            {/* Render the CvProjects component passing the CV id */}
+            <CvProjects cvId={id} />
+          </Card>
+        </Col>
+      </Row>
         </>
       )}
     </>

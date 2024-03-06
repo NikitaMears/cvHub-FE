@@ -1,16 +1,3 @@
-/*!
-  =========================================================
-  * Muse Ant Design Dashboard - v1.0.0
-  =========================================================
-  * Product Page: https://www.creative-tim.com/product/muse-ant-design-dashboard
-  * Copyright 2021 Creative Tim (https://www.creative-tim.com)
-  * Licensed under MIT (https://github.com/creativetimofficial/muse-ant-design-dashboard/blob/main/LICENSE.md)
-  * Coded by Creative Tim
-  =========================================================
-  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// import { useState } from "react";
 import { Menu, Button } from "antd";
 import { NavLink, useLocation } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
@@ -64,8 +51,7 @@ function Sidenav({ color }) {
     </svg>,
   ];
 
-
-
+ 
 
 
   const profile = [
@@ -142,7 +128,19 @@ Document Management        </Menu.Item>
             <span className="label">CV</span>
           </NavLink>
         </Menu.Item>
-
+        <Menu.Item key="5073">
+          <NavLink to="/rfp">
+            <span
+              className="icon"
+              style={{
+                background: page === "tables" ? color : "",
+              }}
+            >
+              {tables}
+            </span>
+            <span className="label">RFP</span>
+          </NavLink>
+        </Menu.Item>
         <Menu.Item key="19">
           <NavLink to="/tp">
             <span
@@ -156,6 +154,21 @@ Document Management        </Menu.Item>
             <span className="label">TP</span>
           </NavLink>
         </Menu.Item>
+        <Menu.Item key="5063">
+          <NavLink to="/firmExperience">
+            <span
+              className="icon"
+              style={{
+                background: page === "tables" ? color : "",
+              }}
+            >
+              {tables}
+            </span>
+            <span className="label">Firm Experience</span>
+          </NavLink>
+        </Menu.Item>
+
+      
         {/* <Menu.Item key="2">
           <NavLink to="/tables">
             <span
