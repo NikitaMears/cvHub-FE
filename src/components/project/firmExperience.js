@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Card, Row, Col, Button, Table, Modal } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import ProjectForm from './projectForm'; // Import the ProjectForm component
 import useFetchWithToken from '../../services/api';
+import { NavLink } from "react-router-dom";
 
-const Project = () => {
+const FirmExperience = () => {
   const [projectModalVisible, setProjectModalVisible] = useState(false);
   const [formData, setFormData] = useState({});
   const { data: projectData, loading, error, refetchData } = useFetchWithToken('projects');
@@ -30,8 +31,10 @@ const Project = () => {
   const projectColumns = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
     { title: 'Title', dataIndex: 'title', key: 'title' },
-    { title: 'Description', dataIndex: 'description', key: 'description' },
-    { title: 'Points', dataIndex: 'points', key: 'points' },
+    { title: 'Client', dataIndex: 'client', key: 'client' },
+    { title: 'Worth', dataIndex: 'worth', key: 'worth' },
+    { title: 'Duration', dataIndex: 'duration', key: 'duration' },
+
     {
       title: 'Actions',
       key: 'actions',
@@ -50,9 +53,17 @@ const Project = () => {
             danger
             icon={<DeleteOutlined />}
             onClick={() => handleDeleteProject(record.id)}
+            style={{ marginRight: 8 }}
+
           >
             Delete
           </Button>
+          <Button
+            type="link"
+          >
+ <NavLink to={`/firmExperienceDetails/${record.id}`} style={{ color: 'green' }}>
+          <InfoCircleOutlined /> &nbsp;Details
+        </NavLink>          </Button>
         </>
       ),
     },
@@ -83,6 +94,8 @@ const Project = () => {
         visible={projectModalVisible}
         onCancel={() => setProjectModalVisible(false)}
         footer={null}
+        width={800} // Adjust the width here as needed
+
       >
         {/* Make sure refetchData is passed as a prop */}
         <ProjectForm formData={formData} setFormData={setFormData} closeModal={closeModal} refetchData={refetchData} />
@@ -91,4 +104,4 @@ const Project = () => {
   );
 };
 
-export default Project;
+export default FirmExperience;

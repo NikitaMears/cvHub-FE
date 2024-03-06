@@ -163,8 +163,8 @@ console.log(editMode)
                 name="file"
                 customRequest={handleUpload}
                 beforeUpload={(file) => {
-                  const isExcel = file.type === "application/vnd.ms-excel" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                  if (!isExcel) {
+                  const isExcel = file.type === "application/docx" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                  if (1 > 2) {
                     message.error("You can only upload Excel files!");
                   }
                   return true;

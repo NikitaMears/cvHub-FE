@@ -10,9 +10,11 @@ const CvProjects = ({ cvId }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [points, setPoints] = useState('');
+  const [position, setPosition] = useState('');
+
   const { data: allProjects, loading, error } = useFetchWithToken('projects'); // Fetch all projects using useFetchWithToken hook
   const { data: allCVProjects } = useFetchWithToken(`cvProjects/${cvId}`); // Fetch all CV projects using useFetchWithToken hook
-  const { postData } = useFetchWithToken('cvProjects');
+  const { postData } = useFetchWithToken('cvProjects2');
 
   useEffect(() => {
     if (allProjects) {
@@ -45,11 +47,14 @@ const CvProjects = ({ cvId }) => {
   const handlePointsChange = (e) => {
     setPoints(e.target.value);
   };
+  const handlePositionChange = (e) => {
+    setPosition(e.target.value);
+  };
 
   const onFinish = async () => {
     try {
       // Send data to the /cvProjects endpoint
-      const data = { cvId:cvId, projectId: selectedProject, points: points };
+      const data = { cvId:cvId, projectId: selectedProject, points: points, position: position };
       await postData(data);
   
       // Display success message and close the modal
@@ -65,7 +70,7 @@ const CvProjects = ({ cvId }) => {
   const columns = [
     { title: 'ID', dataIndex: ['associatedProjectInfo', 'id'], key: 'id' },
     { title: 'Project Title', dataIndex: ['associatedProjectInfo', 'title'], key: 'title' },
-    { title: 'Description', dataIndex: ['associatedProjectInfo', 'description'], key: 'description' },
+    { title: 'Position', dataIndex: ['cvProjectInfo', 'position'], key: 'position' },
     { title: 'Points', dataIndex: ['cvProjectInfo', 'points'], key: 'points' },
   ];
   
@@ -96,12 +101,15 @@ const CvProjects = ({ cvId }) => {
               ))}
             </Select>
           </Form.Item>
+          <Form.Item label="Position" name="position" onChange={handlePositionChange} value={position} rules={[{ required: true, message: 'Please enter a Position' }]}>
+                  <Input />
+                </Form.Item>
           <Form.Item
             label="Points"
             name="points"
             rules={[{ required: true, message: 'Please enter points' }]}
           >
-            <Input type="number" onChange={handlePointsChange} value={points} />
+            <Input type="number" max={5} min={1} onChange={handlePointsChange} value={points} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
