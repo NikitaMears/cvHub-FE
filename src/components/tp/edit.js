@@ -7,11 +7,13 @@ import { NavLink } from "react-router-dom";
 const { Option } = Select;
 const { Step } = Steps;
 
-const CreateTp = ({ closeModal }) => {
+const EditTp = ({ formData, setFormData, closeModal, refetchData  }) => {
+    console.log("9090",formData)
   const [form] = Form.useForm();
   const { data: rfps, loading: rfpsLoading, error: rfpsError } = useFetchWithToken('rfps');
-  const {  postFormData } = useFetchWithToken('tps');
+  const {  putFormData } = useFetchWithToken('UploadTP');
   const { postData } = useFetchWithToken('tpMembers');
+  // const id = formData.id;
 
   const [cvs, setCvs] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
@@ -42,12 +44,18 @@ const CreateTp = ({ closeModal }) => {
     );
     setFilteredDataSource(filteredData);
   }, [cvs, searchText]);
-
+  useEffect(() => {
+    form.setFieldsValue({
+      ...formData,
+    //  issuedOn: moment(formData.issuedOn)
+    });
+  }, [formData, form]);
   const onFinishTpDetails = async (values) => {
     try {
       await form.validateFields(); // Validate form fields
       const formDataWithFile = { ...values, file: values.file?.file };
-      const response =     await postFormData(formDataWithFile, 'uploadTP');
+      const response =     await putFormData(formDataWithFile, `UploadTP/${formData.id}`);
+      console.log(response)
       setTpId(response.id)
       setCurrentStep(1); // Move to the next step
     } catch (error) {
@@ -225,4 +233,4 @@ const CreateTp = ({ closeModal }) => {
   );
 };
 
-export default CreateTp;
+export default EditTp;

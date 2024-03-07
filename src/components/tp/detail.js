@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Upload, message, Descriptions, Button, Tag } from "antd";
+import { Row, Col, Card, Upload, message, Descriptions, Button, Tag , Table, Divider} from "antd";
 import { useParams } from "react-router-dom";
 import { ToTopOutlined } from '@ant-design/icons';
 import useFetchWithToken from '../../services/api';
@@ -35,6 +35,30 @@ function TpDetail() {
       setFileList([]);
     }
   };
+  const columns = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Expert Name',
+      dataIndex: 'expertName',
+      key: 'expertName',
+    },
+    {
+      title: 'Position',
+      dataIndex: 'cv',
+      key: 'cv',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <a href={`/cvDetails/${record.id}`}>Details</a>
+      ),
+    },
+  ];
 
   useEffect(() => {
     if (tpData && tpData.title) {
@@ -77,30 +101,15 @@ function TpDetail() {
   <Descriptions.Item label="Year" span={3}>
     {tpData && tpData.year}
   </Descriptions.Item>
-  <Descriptions.Item label="Members" span={3}>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Expert Name</th>
-          <th>Country</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {tpData && tpData.members && tpData.members.map(member => (
-          <tr key={member.id}>
-            <td>{member.id}</td>
-            <td>{member.expertName}</td>
-            <td>{member.country}</td>
-            <td>
-              <a href={`/cvDetails/${member.id}`}>Details</a>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+  <Descriptions.Item label="Team Members" span={3}>
   </Descriptions.Item>
+
+  <Card type="inner" title="Inner Card title" extra={<a href="#">More</a>}>
+  <Table dataSource={tpData && tpData.members} columns={columns} rowKey={(record) => record.id} />
+    </Card>
+
+
+
 </Descriptions>
 
           </Card>

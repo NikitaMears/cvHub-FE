@@ -41,11 +41,7 @@ const CvList = ({rfpId}) => {
       dataIndex: 'expertName',
       key: 'expertName',
     },
-    {
-      title: 'Serial Number',
-      dataIndex: 'serialNumber',
-      key: 'serialNumber',
-    },
+   
     {
       title: 'Country',
       dataIndex: 'country',

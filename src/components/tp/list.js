@@ -5,6 +5,7 @@ import { ToTopOutlined, SearchOutlined, EditOutlined, DeleteOutlined } from "@an
 import useFetchWithToken from "../../services/api";
 import moment from "moment";
 import CreateTp from "./create"; // Import the CreateTp form
+import EditTp from "./edit";
 
 const { Search } = Input;
 
@@ -13,6 +14,7 @@ function TpList() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editData, setEditData] = useState(null);
   const { data: tpsData, postFormData, refetchData } = useFetchWithToken("tps");
+  const [editMode, setEditMode] = useState(false);
 
   const handleUpload = async ({ file }) => {
     try {
@@ -30,7 +32,10 @@ function TpList() {
   };
 
   const handleEdit = (record) => {
+    console.log("e", record)
+
     setEditData(record);
+    setEditMode(true)
     setShowCreateModal(true);
   };
 
@@ -108,20 +113,34 @@ function TpList() {
               </Upload>
             </div>
             <Modal
-              title={editData ? "Edit TP" : "Create New TP"}
+              title={editMode ? "Edit TP" : "Create New TP"}
               visible={showCreateModal}
+                      width={800} // Adjust the width here as needed
+
               onCancel={() => {
                 setShowCreateModal(false);
                 setEditData(null);
               }}
               footer={null}
             >
-              <CreateTp
+
+{editMode ? (
+              <EditTp
                 formData={editData}
-                setFormData={setEditData}
+                setFormData={editData}
                 closeModal={() => setShowCreateModal(false)}
                 refetchData={refetchData}
+                        width={800} // Adjust the width here as needed
+
               />
+              ):<CreateTp
+              formData={editData}
+              setFormData={setEditData}
+              closeModal={() => setShowCreateModal(false)}
+              refetchData={refetchData}
+            />}
+
+
             </Modal>
           </Card>
         </Col>

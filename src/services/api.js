@@ -68,8 +68,29 @@ const useFetchWithToken = (endpoint) => {
       throw new Error(error.message || 'Failed to upload data');
     }
   };
+  const putFormData = async (formData, endpoint) => {
+    console.log("fff", formData)
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token not found');
+      }
+      
+      const response = await axios.put(`${apiUrl}/${endpoint}`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      return response.data;
+    } catch (error) {
+      throw new Error(error.message || 'Failed to upload data');
+    }
+  };
   
   const putData = async (putData, urlParam) => {
+    console.log("url",urlParam)
     try {
       if (!token) {
         throw new Error('Token not found');
@@ -102,7 +123,7 @@ const useFetchWithToken = (endpoint) => {
     }
   };
 
-  return { data, error, loading, postData, putData, deleteData, postFormData };
+  return { data, error, loading, postData, putData, deleteData, postFormData , putFormData};
 };
 
 export default useFetchWithToken;
