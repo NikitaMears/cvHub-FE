@@ -130,7 +130,7 @@ function CvDetail() {
         <Col span={24} md={24} className="mb-24">
           <Card
             bordered={false}
-            title={<h6 className="font-semibold m-0">Associated Projects</h6>}
+            title={<h6 className="font-semibold m-0">Project Evaluation</h6>}
             className="header-solid h-full"
             bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
           >

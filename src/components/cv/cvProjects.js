@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Modal, Form, Select, Input, message } from 'antd';
+import { Button, Table, Modal, Form, Select, Input, message, Row, Col } from 'antd';
 import useFetchWithToken from '../../services/api'; // Import the useFetchWithToken hook
+import axios from 'axios';
 
 const { Option } = Select;
 
@@ -50,12 +51,34 @@ const CvProjects = ({ cvId }) => {
   const handlePositionChange = (e) => {
     setPosition(e.target.value);
   };
-
-  const onFinish = async () => {
+  const onFinish = async (values) => {
     try {
+      // Calculate the average of the form values
+      const knowledgeOfWork = parseInt(values.knowledgeOfWork);
+      const qualityOfWork = parseInt(values.qualityOfWork);
+      const meetingDeadline = parseInt(values.meetingDeadline);
+      const planning = parseInt(values.planning);
+      const decisionMaking = parseInt(values.decisionMaking);
+  
+      // Calculate the average of the form values
+      const average = (knowledgeOfWork + qualityOfWork + meetingDeadline + planning + decisionMaking) / 5;
+  
+      console.log(average)
       // Send data to the /cvProjects endpoint
-      const data = { cvId:cvId, projectId: selectedProject, points: points, position: position };
-      await postData(data);
+      const data = { 
+        cvId: cvId, 
+        projectId: values.project, 
+        points: average, 
+        position: values.position, 
+        qualityOfWork: values.qualityOfWork, 
+        decisionMaking: values.decisionMaking, 
+        planning: values.planning, 
+        knowledgeOfWork: values.knowledgeOfWork, 
+        meetingDeadline: values.meetingDeadline 
+      };
+      
+      // Assuming axios is imported as axios
+      await axios.post('http://localhost:3001/cvProjects2', data);
   
       // Display success message and close the modal
       message.success('Project associated successfully!');
@@ -66,55 +89,115 @@ const CvProjects = ({ cvId }) => {
     }
   };
   
+  
 
   const columns = [
-    { title: 'ID', dataIndex: ['associatedProjectInfo', 'id'], key: 'id' },
     { title: 'Project Title', dataIndex: ['associatedProjectInfo', 'title'], key: 'title' },
     { title: 'Position', dataIndex: ['cvProjectInfo', 'position'], key: 'position' },
-    { title: 'Points', dataIndex: ['cvProjectInfo', 'points'], key: 'points' },
+    { title: 'Knowledge Of Work', dataIndex: ['cvProjectInfo', 'knowledgeOfWork'], key: 'knowledgeOfWork' },
+
+    { title: 'Quality Of Work', dataIndex: ['cvProjectInfo', 'qualityOfWork'], key: 'qualityOfWork' },
+    { title: 'Decision Making', dataIndex: ['cvProjectInfo', 'decisionMaking'], key: 'decisionMaking' },
+    { title: 'Meeting Deadline', dataIndex: ['cvProjectInfo', 'meetingDeadline'], key: 'meetingDeadline' },
+    { title: 'Project Average', dataIndex: ['cvProjectInfo', 'points'], key: 'points' },
+
   ];
-  
 
   return (
     <div>
       <Button type="primary" onClick={handleAddProject}>
-        Add Project
+        Add Project Evaluation
       </Button>
       <Table dataSource={cvProjects} columns={columns} loading={loading} rowKey="ProjectId" />
       <Modal
-        title="Add Project to CV"
+        title="Add Project Evaluation"
         visible={modalVisible}
+        footer = {false}
         onCancel={handleCancel}
         onOk={handleOk}
       >
         <Form onFinish={onFinish}>
-          <Form.Item
-            label="Project"
-            name="project"
-            rules={[{ required: true, message: 'Please select a project' }]}
-          >
-            <Select style={{ width: '100%' }} onChange={handleProjectChange}>
-              {projects.map((project) => (
-                <Option key={project.id} value={project.id}>
-                  {project.title}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item label="Position" name="position" onChange={handlePositionChange} value={position} rules={[{ required: true, message: 'Please enter a Position' }]}>
-                  <Input />
-                </Form.Item>
-          <Form.Item
-            label="Points"
-            name="points"
-            rules={[{ required: true, message: 'Please enter points' }]}
-          >
-            <Input type="number" max={5} min={1} onChange={handlePointsChange} value={points} />
-          </Form.Item>
+          <Row gutter={[16, 16]}>
+            <Col span={12}>
+              <Form.Item
+                label="Project"
+                name="project"
+                rules={[{ required: true, message: 'Please select a project' }]}
+              >
+                <Select style={{ width: '100%' }} onChange={handleProjectChange}>
+                  {projects.map((project) => (
+                    <Option key={project.id} value={project.id}>
+                      {project.title}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Position"
+                name="position"
+                rules={[{ required: true, message: 'Please enter a Position' }]}
+              >
+                <Input onChange={handlePositionChange} value={position} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={[16, 16]}>
+            <Col span={12}>
+              <Form.Item
+                label="Knowledge of Work"
+                name="knowledgeOfWork"
+                rules={[{ required: true, message: 'Please enter knowledge of work' }]}
+              >
+                <Input type="number" max={5} min={1} />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Quality of Work"
+                name="qualityOfWork"
+                rules={[{ required: true, message: 'Please enter quality of work' }]}
+              >
+                <Input type="number" max={5} min={1} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={[16, 16]}>
+            <Col span={12}>
+              <Form.Item
+                label="Meeting Deadline"
+                name="meetingDeadline"
+                rules={[{ required: true, message: 'Please enter meeting deadline' }]}
+              >
+                <Input type="number" max={5} min={1} />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Planning"
+                name="planning"
+                rules={[{ required: true, message: 'Please enter planning' }]}
+              >
+                <Input type="number" max={5} min={1} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={[16, 16]}>
+            <Col span={12}>
+              <Form.Item
+                label="Decision Making"
+                name="decisionMaking"
+                rules={[{ required: true, message: 'Please enter decision making' }]}
+              >
+                <Input type="number" max={5} min={1} />
+              </Form.Item>
+            </Col>
+         
+          </Row>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Associate Project
-            </Button>
+Save            </Button>
           </Form.Item>
         </Form>
       </Modal>

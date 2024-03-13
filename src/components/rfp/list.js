@@ -1,30 +1,126 @@
 import React, { useState, useEffect } from "react";
-import { Table, Card, Upload, message, Input, Row, Col, Modal, Button } from "antd";
+import { Table, Card, Upload, message, Input, Row, Col,Dropdown, Modal, Button, Checkbox } from "antd";
 import { NavLink } from "react-router-dom";
-import { ToTopOutlined, SearchOutlined , EditOutlined, InfoCircleOutlined} from "@ant-design/icons";
+import { ToTopOutlined, SearchOutlined ,DownOutlined, EditOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import useFetchWithToken from "../../services/api";
 import RFPForm from "./create";
 import EditRFPForm from "./edit";
 import moment from 'moment';
+import axios from 'axios';
+
+import { Tooltip } from 'antd';
 
 const { Search } = Input;
+function highlightMatchedText(text, query) {
+  if (!text || !query || query.trim() === '') return text;
+
+  const index = text.toLowerCase().indexOf(query.toLowerCase());
+  if (index === -1) return text;
+
+  const maxLength = 20; // Adjust the number of characters to display before and after the highlighted text
+  const startIndex = Math.max(0, index - maxLength);
+  const endIndex = Math.min(text.length, index + query.length + maxLength);
+
+  const prefix = startIndex > 0 ? '...' : '';
+  const suffix = endIndex < text.length ? '...' : '';
+
+  const highlightedText = text.substring(startIndex, endIndex)
+    .replace(new RegExp(query, 'gi'), (match) => `<span style="background-color: yellow">${match}</span>`);
+
+  return (
+    <span dangerouslySetInnerHTML={{ __html: prefix + highlightedText + suffix }} />
+  );
+}
+
+
+
 
 function RFPList() {
   const [RFPModalVisible, setRFPModalVisible] = useState(false);
   const [RFPEModalVisible, setRFPEModalVisible] = useState(false);
+  // const [rfpData, setRFPData] = useState(false);
+
 
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({});
-  const { data: rfpData, postFormData, refetchData } = useFetchWithToken("rfps");
+  const {  postFormData, refetchData } = useFetchWithToken("rfps");
+  const [rfpData, setRFPData] = useState([]);
+  const { data: fetchedData } = useFetchWithToken("rfps");
+  
   const [uploading, setUploading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
 
   useEffect(() => {
-    return () => {
-      // Cleanup function
-      // Cancel any subscriptions or clear async tasks here
-    };
+    fetchData(); // Fetch data when component mounts
   }, []);
 
+  const ColumnSelector = ({ columns, selectedColumns, onChange }) => {
+    const handleChange = (checkedValues) => {
+      onChange(checkedValues);
+    };
+  
+    return (
+      <Checkbox.Group options={columns} defaultValue={selectedColumns} onChange={handleChange} />
+    );
+  };
+  
+  const DynamicTable = ({ columns: initialColumns, data }) => {
+    const defaultDisplayedColumns = initialColumns.map(column => column.key).slice(0, 7); // Select first two columns by default
+    const [displayedColumns, setDisplayedColumns] = useState(defaultDisplayedColumns);
+  
+    const handleColumnChange = (selectedColumns) => {
+      setDisplayedColumns(selectedColumns);
+    };
+  
+    const filteredColumns = initialColumns.filter(column => displayedColumns.includes(column.key));
+  
+    return (
+      <>
+        <Dropdown
+          overlay={
+            <ColumnSelector
+              columns={initialColumns.map((column) => ({
+                label: column.title,
+                value: column.key,
+              }))}
+              selectedColumns={defaultDisplayedColumns}
+              onChange={handleColumnChange}
+            />
+          }
+          trigger={["click"]}
+        >
+          <Button>
+            Select Columns <DownOutlined />
+          </Button>
+        </Dropdown>
+        <Table columns={filteredColumns} dataSource={data} />
+      </>
+    );
+  };
+  
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/rfps");
+      setRFPData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const handleSearch = async () => {
+    console.log("se", searchQuery)
+    try {
+      const response = await axios.post(`http://localhost:3001/rfps/search`, {
+        query: searchQuery
+      });
+      console.log('Search Results:', response.data);
+setRFPData(response.data)      // Handle search results here
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   const handleAddRFP = () => {
     setFormData({});
     setRFPModalVisible(true);
@@ -89,6 +185,61 @@ console.log(editMode)
     filterIcon: (filtered) => <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />,
     onFilter: (value, record) => record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
   });
+  // const columns = [
+  //   {
+  //     title: "Title",
+  //     dataIndex: "title",
+  //     key: "title",
+  //     width: "20%",
+  //   },
+  //   {
+  //     title: "RFP No",
+  //     dataIndex: "rfpNo",
+  //     key: "rfpNo",
+  //   },
+  //   // Display client column only when data is not from search
+  //   ...(searchQuery ? [] : [
+  //     {
+  //       title: "Client",
+  //       dataIndex: "client",
+  //       key: "client",
+  //     },
+  //   ]),
+  //   // Display country column only when data is not from search
+  //   ...(searchQuery ? [] : [
+  //     {
+  //       title: "Country",
+  //       dataIndex: "country",
+  //       key: "country",
+  //     },
+  //   ]),
+  //   ...(searchQuery ? [
+  //     {
+  //       title: 'Content',
+  //       dataIndex: 'content',
+  //       key: 'content',
+  //       render: (text) => highlightMatchedText(text, searchQuery),
+  //     },
+  //   ] : []),
+  //   {
+  //     title: "Action",
+  //     key: "action",
+  //     render: (text, record) => (
+  //       <Button type="link" icon={<EditOutlined />} onClick={() => handleEdit(record)}>Edit</Button>
+  //     )
+  //   },
+  //   {
+  //     title: 'More',
+  //     key: 'more',
+  //     dataIndex: 'id',
+  //     render: (text, record) => (
+  //       <NavLink to={`/rfpDetails/${record.id}`} style={{ color: 'green' }}>
+  //         <InfoCircleOutlined /> &nbsp;Details
+  //       </NavLink>
+  //     ),
+  //   }
+  // ];
+
 
   const columns = [
     {
@@ -96,38 +247,73 @@ console.log(editMode)
       dataIndex: "title",
       key: "title",
       width: "20%",
-      ...getColumnSearchProps("title")
+      ...getColumnSearchProps("title"),
+      render: (text) => (
+        <Tooltip title={text}>
+          {text}
+        </Tooltip>
+      ),
     },
     {
       title: "RFP No",
       dataIndex: "rfpNo",
       key: "rfpNo",
-      ...getColumnSearchProps("rfpNo")
+      ...getColumnSearchProps("rfpNo"),
+      render: (text) => (
+        <Tooltip title={text}>
+          {text}
+        </Tooltip>
+      ),
     },
+
+    // Display client column only when data is not from search
+    ...(searchQuery ? [] : [
+      {
+        title: "Client",
+        dataIndex: "client",
+        key: "client",
+        ...getColumnSearchProps("client"),
+        render: (text) => (
+          <Tooltip title={text}>
+            {text}
+          </Tooltip>
+        ),
+      },
+    ]),
+    ...(searchQuery ? [] : [
+      {
+        title: "Country",
+        dataIndex: "country",
+        key: "country",
+        ...getColumnSearchProps("country"),
+      },
+    ]),
     {
-      title: "Client",
-      dataIndex: "client",
-      key: "client",
-      ...getColumnSearchProps("client")
+      title: "Sector",
+      dataIndex: "sector",
+      key: "sector",
+      ...getColumnSearchProps("sector"),
+      render: (text) => (
+        <Tooltip title={text}>
+          {text}
+        </Tooltip>
+      ),
     },
-    {
-      title: "Country",
-      dataIndex: "country",
-      key: "country",
-      ...getColumnSearchProps("country")
-    },
-    // {
-    //   title: "Issued On",
-    //   dataIndex: "issuedOn",
-    //   key: "issuedOn",
-    //   ...getColumnSearchProps("issuedOn")
-    // },
+    // Display country column only when data is not from search
+ 
+    ...(searchQuery ? [
+      {
+        title: 'Content',
+        dataIndex: 'content',
+        key: 'content',
+        render: (text) => highlightMatchedText(text, searchQuery),
+      },
+    ] : []),
     {
       title: "Action",
       key: "action",
       render: (text, record) => (
-        <Button type="link"             icon={<EditOutlined />}
-        onClick={() => handleEdit(record)}>Edit</Button>
+        <Button type="link" icon={<EditOutlined />} onClick={() => handleEdit(record)}>Edit</Button>
       )
     },
     {
@@ -141,20 +327,85 @@ console.log(editMode)
       ),
     }
   ];
+  
+  
+  // const columns = [
+  //   {
+  //     title: "Title",
+  //     dataIndex: "title",
+  //     key: "title",
+  //     width: "20%",
+  //     ...getColumnSearchProps("title")
+  //   },
+  //   {
+  //     title: "RFP No",
+  //     dataIndex: "rfpNo",
+  //     key: "rfpNo",
+  //     ...getColumnSearchProps("rfpNo")
+  //   },
+  //   {
+  //     title: "Client",
+  //     dataIndex: "client",
+  //     key: "client",
+  //     ...getColumnSearchProps("client")
+  //   },
+  //   {
+  //     title: "Country",
+  //     dataIndex: "country",
+  //     key: "country",
+  //     ...getColumnSearchProps("country")
+  //   },
+  //   // {
+  //   //   title: "Issued On",
+  //   //   dataIndex: "issuedOn",
+  //   //   key: "issuedOn",
+  //   //   ...getColumnSearchProps("issuedOn")
+  //   // },
+  //   {
+  //     title: "Action",
+  //     key: "action",
+  //     render: (text, record) => (
+  //       <Button type="link"             icon={<EditOutlined />}
+  //       onClick={() => handleEdit(record)}>Edit</Button>
+  //     )
+  //   },
+  //   {
+  //     title: 'More',
+  //     key: 'more',
+  //     dataIndex: 'id',
+  //     render: (text, record) => (
+  //       <NavLink to={`/rfpDetails/${record.id}`} style={{ color: 'green' }}>
+  //         <InfoCircleOutlined /> &nbsp;Details
+  //       </NavLink>
+  //     ),
+  //   }
+  // ];
 
   return (
     <div className="tabled">
       <Row gutter={[24, 0]}>
+
+      <Col span={12}>
+                <NavLink to="#" onClick={handleAddRFP} className="ant-btn ant-btn-primary" role="button">
+                 Add RFP
+                </NavLink>
+              </Col>
+              <Col span={12}>
+                <Search
+                  placeholder="Search"
+                  allowClear
+                  enterButton={<SearchOutlined />}
+                  size="large"
+                  onSearch={handleSearch}
+                  onChange={e => setSearchQuery(e.target.value)}
+                />
+              </Col>
        
         <Col xs={24} xl={24}>
           <Card>
-          <Col span={12}>
-          <NavLink to="#" onClick={handleAddRFP} className="ant-btn ant-btn-primary" role="button">
-           Add RFP
-          </NavLink>
-        </Col>
+          
             <div className="table-responsive">
-              <Table columns={columns} dataSource={rfpData} pagination={{ pageSize: 5 }} className="ant-border-space" />
+              <DynamicTable columns={columns} data={rfpData} pagination={{ pageSize: 5 }} className="ant-border-space" />
             </div>
           </Card>
           <Card bordered={false}>
