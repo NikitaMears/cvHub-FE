@@ -6,6 +6,8 @@ import useFetchWithToken from '../../services/api'; // Import the useFetchWithTo
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import CvList from "./cvs";
 import TpDetail from "../tp/detail";
+import RFPFR from "./fr";
+import RFPIR from "./ir";
 const { TabPane } = Tabs;
 
 function RFPDetail() {
@@ -158,6 +160,12 @@ function RFPDetail() {
         </TabPane>
         <TabPane tab="Technical Proposal" key="3">
         <TpDetail  rfpId={id} />
+        </TabPane>
+        <TabPane tab="Inception Report" key="4">
+        <RFPIR  rfpId={id} />
+        </TabPane>
+        <TabPane tab="Final Report" key="5">
+        <RFPFR  rfpId={id} />
         </TabPane>
       </Tabs>
     </>

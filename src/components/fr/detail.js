@@ -7,10 +7,10 @@ import useFetchWithToken from '../../services/api'; // Import the useFetchWithTo
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { NavLink } from "react-router-dom";
 
-function IRDetail() {
+function FRDetail() {
   const [fileList, setFileList] = useState([]);
   const { id } = useParams(); 
-  const { data: irData, loading, postFormData } = useFetchWithToken(`frs/${id}`); // Fetch firm details using useFetchWithToken hook
+  const { data: irData, loading, postFormData } = useFetchWithToken(`irs/${id}`); // Fetch firm details using useFetchWithToken hook
 console.log("ird", irData)
 
   const docs2 = [
@@ -32,7 +32,7 @@ console.log("ird", irData)
     formData.append("file", fileList[0]);
 
     try {
-      await postFormData(formData, `uploadFr/${id}`); // Upload firm experience using postFormData function from useFetchWithToken hook
+      await postFormData(formData, `uploadIr/${id}`); // Upload firm experience using postFormData function from useFetchWithToken hook
       message.success("File uploaded successfully!");
       setFileList([]);
     } catch (error) {
@@ -53,7 +53,7 @@ console.log("ird", irData)
               <div style={{ height: "100%" }}>
                 <Card
                   bordered={false}
-                  title={<h6 className="font-semibold m-0">IR Details</h6>}
+                  title={<h6 className="font-semibold m-0">FR Details</h6>}
                   className="header-solid h-full card-profile-information"
                   bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
                 >
@@ -149,4 +149,4 @@ console.log("ird", irData)
   );
 }
 
-export default IRDetail;
+export default FRDetail;

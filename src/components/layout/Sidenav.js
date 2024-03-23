@@ -182,6 +182,21 @@ Document Management        </Menu.Item>
           </NavLink>
         </Menu.Item>
 
+        <Menu.Item key="5123">
+          <NavLink to="/fr">
+            <span
+              className="icon"
+              style={{
+                background: page === "tables" ? color : "",
+              }}
+            >
+              {tables}
+            </span>
+            <span className="label">Final Report</span>
+          </NavLink>
+        </Menu.Item>
+
+
       
         {/* <Menu.Item key="2">
           <NavLink to="/tables">

@@ -26,10 +26,13 @@ import TpList from "./components/tp/list";
 import TpDetail from "./components/tp/detail";
 import FirmExperience from "./components/project/firmExperience";
 import IR from "./components/ir/IR";
+import FR from "./components/fr/FR";
+
 
 import FirmExperienceDetail from "./components/project/detail";
 import IRDetail from "./components/ir/detail";
 
+import FRDetail from "./components/fr/detail";
 
 
 import User from "./components/userManagement/user";
@@ -46,7 +49,7 @@ function App() {
     <div className="App">
       <Switch>
         <Route path="/" exact component={Login} />
-      
+
         <Route path="/login" exact component={Login} />
 
         <Main>
@@ -62,8 +65,12 @@ function App() {
           <Route exact path="/firmExperience" component={FirmExperience} />
           <Route exact path="/ir" component={IR} />
 
+          <Route exact path="/fr" component={FR} />
+
           <Route exact path="/firmExperienceDetails/:id" component={FirmExperienceDetail} />
-                    <Route exact path="/irDetails/:id" component={IRDetail} />
+          <Route exact path="/irDetails/:id" component={IRDetail} />
+          <Route exact path="/frDetails/:id" component={FRDetail} />
+
 
 
 
