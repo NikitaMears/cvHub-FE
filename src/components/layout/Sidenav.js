@@ -168,6 +168,20 @@ Document Management        </Menu.Item>
           </NavLink>
         </Menu.Item>
 
+        <Menu.Item key="5163">
+          <NavLink to="/ir">
+            <span
+              className="icon"
+              style={{
+                background: page === "tables" ? color : "",
+              }}
+            >
+              {tables}
+            </span>
+            <span className="label">Inception Report</span>
+          </NavLink>
+        </Menu.Item>
+
       
         {/* <Menu.Item key="2">
           <NavLink to="/tables">

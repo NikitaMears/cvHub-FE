@@ -25,7 +25,11 @@ import RFPDetail from "./components/rfp/detail";
 import TpList from "./components/tp/list";
 import TpDetail from "./components/tp/detail";
 import FirmExperience from "./components/project/firmExperience";
+import IR from "./components/ir/IR";
+
 import FirmExperienceDetail from "./components/project/detail";
+import IRDetail from "./components/ir/detail";
+
 
 
 import User from "./components/userManagement/user";
@@ -56,7 +60,11 @@ function App() {
           <Route exact path="/cvDetails/:id" component={CvDetail} />
           <Route exact path="/rfp" component={RFPList} />
           <Route exact path="/firmExperience" component={FirmExperience} />
+          <Route exact path="/ir" component={IR} />
+
           <Route exact path="/firmExperienceDetails/:id" component={FirmExperienceDetail} />
+                    <Route exact path="/irDetails/:id" component={IRDetail} />
+
 
 
           <Route exact path="/rfpDetails/:id" component={RFPDetail} />
