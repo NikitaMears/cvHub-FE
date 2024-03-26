@@ -211,9 +211,9 @@ setTPData(response.data)      // Handle search results here
           <Button type="link" icon={<EditOutlined />} onClick={() => handleEdit(record)}>
             Edit
           </Button>
-          <Button type="link" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record)}>
+          {/* <Button type="link" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record)}>
             Delete
-          </Button>
+          </Button> */}
           <NavLink to={`/tpDetails/${record.id}`}>Details</NavLink>
         </>
       ),

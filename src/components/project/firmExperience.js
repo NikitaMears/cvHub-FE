@@ -123,7 +123,7 @@ const FirmExperience = () => {
       render: (_, record) => (
         <>
           <Button type="link" icon={<EditOutlined />} onClick={() => handleEditProject(record)} style={{ marginRight: 8 }}>Edit</Button>
-          <Button type="link" danger icon={<DeleteOutlined />} onClick={() => handleDeleteProject(record.id)} style={{ marginRight: 8 }}>Delete</Button>
+          {/* <Button type="link" danger icon={<DeleteOutlined />} onClick={() => handleDeleteProject(record.id)} style={{ marginRight: 8 }}>Delete</Button> */}
           <Button type="link"><NavLink to={`/firmExperienceDetails/${record.id}`} style={{ color: 'green' }}><InfoCircleOutlined /> &nbsp;Details</NavLink></Button>
         </>
       ),
@@ -152,11 +152,11 @@ const FirmExperience = () => {
     <div>
       <Card>
         <Row gutter={[16, 16]}>
-          <Col span={12}>
+          {/* <Col span={12}>
             <Button type="primary" icon={<PlusOutlined />} onClick={handleAddProject}>
               Add Firm Experience
             </Button>
-          </Col>
+          </Col> */}
           
           <Col span={24}>
             {error && <div>Error: {error}</div>}
