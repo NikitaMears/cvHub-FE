@@ -157,7 +157,7 @@ const IR = () => {
       key: 'content',
       ...getColumnSearchProps('content'),
       render: (text) => {
-        const truncatedText = text.length > 80 ? `${text.substring(0, 80)}...` : text;
+        const truncatedText = text.length > 50 ? `${text.substring(0, 50)}...` : text;
         return highlightMatchedText(truncatedText, searchQuery);
       },
     },

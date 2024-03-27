@@ -103,7 +103,7 @@ const FR = () => {
   
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/irs");
+      const response = await axios.get("http://localhost:3001/frs");
       setFrData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -112,7 +112,7 @@ const FR = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.post(`http://localhost:3001/irs/search`, {
+      const response = await axios.post(`http://localhost:3001/frs/search`, {
         query: searchQuery
       });
       console.log('Search Results:', response.data);
@@ -144,7 +144,7 @@ const FR = () => {
       key: 'content',
       ...getColumnSearchProps('content'),
       render: (text) => {
-        const truncatedText = text.length > 80 ? `${text.substring(0, 80)}...` : text;
+        const truncatedText = text.length > 80 ? `${text.substring(0, 40)}...` : text;
         return highlightMatchedText(truncatedText, searchQuery);
       },
     },
@@ -155,7 +155,7 @@ const FR = () => {
       render: (_, record) => (
         <>
           <Button type="link" icon={<EditOutlined />} onClick={() => handleEditProject(record)} style={{ marginRight: 8 }}>Edit</Button>
-          <Button type="link"><NavLink to={`/irDetails/${record.id}`} style={{ color: 'green' }}><InfoCircleOutlined /> &nbsp;Details</NavLink></Button>
+          <Button type="link"><NavLink to={`/frDetails/${record.id}`} style={{ color: 'green' }}><InfoCircleOutlined /> &nbsp;Details</NavLink></Button>
           {/* <Button type="link" danger icon={<DeleteOutlined />} onClick={() => handleDeleteProject(record.id)} style={{ marginRight */}
           {/* Return any additional actions/buttons */}
         </>

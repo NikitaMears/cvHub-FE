@@ -125,7 +125,7 @@ Document Management        </Menu.Item>
             >
               {tables}
             </span>
-            <span className="label">CV</span>
+            <span className="label">Curriculum Vitae</span>
           </NavLink>
         </Menu.Item>
         <Menu.Item key="5073">
@@ -138,7 +138,7 @@ Document Management        </Menu.Item>
             >
               {tables}
             </span>
-            <span className="label">RFP</span>
+            <span className="label">Req. For Proposal</span>
           </NavLink>
         </Menu.Item>
         <Menu.Item key="19">
@@ -151,7 +151,7 @@ Document Management        </Menu.Item>
             >
               {tables}
             </span>
-            <span className="label">TP</span>
+            <span className="label">Technical Proposal</span>
           </NavLink>
         </Menu.Item>
         <Menu.Item key="5063">

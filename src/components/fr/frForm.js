@@ -9,8 +9,8 @@ const FRForm = ({ formData, setFormData, closeModal, setSubmitted }) => {
   const [form] = Form.useForm();
   const [rfps, setRfps] = useState([]);
   const { data: fetchedData } = useFetchWithToken("rfps");
-  const { postFormData, putFormData } = useFetchWithToken('rfps');
-
+  const { postFormData, putFormData, putData } = useFetchWithToken('frs');
+console.log("22",formData)
 
   useEffect(() => {
     if (fetchedData) {
@@ -32,17 +32,13 @@ const FRForm = ({ formData, setFormData, closeModal, setSubmitted }) => {
 
   const onFinish = async (values) => {
     try {
+      console.log("val",values)
       // Append the file to the form values
       const formDataWithFile = { ...values, file: values.file?.file || formData.file };
 
-      if (!formData.id) {
-        await postFormData(formDataWithFile, `UploadFR`);      
-        setFormData({});
-        closeModal();
-        setSubmitted(true);
-      } else {
+  
         // Use the postFormData function to upload the form data including the file
-        await putFormData(formDataWithFile, `UploadFR/${formData.id}`);      }
+        await putFormData(formDataWithFile, `UploadFR/${formData.id}`);      
       setFormData({});
       closeModal();
       setSubmitted(true); // Trigger refetch after successful form submission
@@ -69,7 +65,7 @@ const FRForm = ({ formData, setFormData, closeModal, setSubmitted }) => {
       <Form.Item label="Content" name="content" rules={[{ required: true, message: 'Please enter content' }]}>
         <Input.TextArea rows={6} />
       </Form.Item>
-      <Form.Item label="File" name="file">
+      <Form.Item label="File" name="file" required= "false">
         <Upload beforeUpload={() => false} name="file" multiple={false}>
           <Button icon={<UploadOutlined />}>Click to Upload</Button>
         </Upload>

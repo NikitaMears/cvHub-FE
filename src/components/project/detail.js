@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Upload, message, Descriptions, Button, Tag, Table } from "antd";
+import { Row, Col, Card, Upload, message, Descriptions, Button, Tag, Table, Collapse } from "antd";
 import { useParams } from "react-router-dom";
 import { Avatar } from 'antd';
 import { UserOutlined, ToTopOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import useFetchWithToken from '../../services/api'; // Import the useFetchWithToken hook
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { NavLink } from "react-router-dom";
+const { Panel } = Collapse;
 
 function FirmExperienceDetail() {
   const [fileList, setFileList] = useState([]);
@@ -39,10 +40,27 @@ function FirmExperienceDetail() {
     expertName: member.associatedCv.expertName,
     country: member.associatedCv.country,
     contactInformation: member.associatedCv.contactInformation,
+    id: member.associatedCv.id
     // Add more fields as needed
   }));
   
-  console.log("ds", dataSource)
+  const columns2 = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Internal/External',
+      dataIndex: 'internalOrExternal',
+      key: 'internalOrExternal',
+    },
+    {
+      title: 'Position',
+      dataIndex: 'position',
+      key: 'position',
+    },
+  ];
   const columns = [
   
     {
@@ -70,13 +88,34 @@ function FirmExperienceDetail() {
         key: 'more',
         dataIndex: 'id',
         render: (text, record) => (
-          <NavLink to={`/cvpDetails/${record.id}`} style={{ color: 'green' }}>
+          <NavLink to={`/cvDetails/${record.id}`} style={{ color: 'green' }}>
             <InfoCircleOutlined /> &nbsp;Details
           </NavLink>
         ),
       }
     // Add more columns as needed
   ];
+
+
+  let dataSource2 = [];
+  
+  if (firmData && firmData.teamMembers) {
+        dataSource2 = firmData.teamMembers.split(',').map((teamMember, index) => {
+      const [name, internalOrExternal, position] = teamMember.split('-').map(item => item.trim());
+
+      return {
+        key: index,
+        name,
+        internalOrExternal,
+        position,
+      };
+    });
+  }
+  dataSource2 = dataSource2.filter((entry) => {
+    return !dataSource.some((dataSource) => dataSource.expertName === entry.name);
+  });
+  
+console.log("dataSource2", dataSource2)
 
 
   const beforeUpload = (file) => {
@@ -129,7 +168,7 @@ function FirmExperienceDetail() {
                       {firmData && firmData.worth}
                     </Descriptions.Item>
                     <Descriptions.Item label="Duration" span={3}>
-                      {firmData && firmData.duration}
+                      {firmData && firmData.duration} Months
                     </Descriptions.Item>
                     <Descriptions.Item label="Project Type" span={3}>
                       {firmData && firmData.projectType}
@@ -200,7 +239,7 @@ function FirmExperienceDetail() {
             </Col>
           </Row>
           {/* Associated Projects */}
-          <Row gutter={[24, 0]}>
+          {/* <Row gutter={[24, 0]}>
             <Col span={24} md={24} className="mb-24">
               <Card
                 bordered={false}
@@ -212,6 +251,35 @@ function FirmExperienceDetail() {
               </Card>
             </Col>
           </Row>
+
+          <Row gutter={[24, 0]}>
+      <Col span={24} md={24} className="mb-24">
+        <Card
+          bordered={false}
+          title={<h6 className="font-semibold m-0">All Team Members</h6>}
+          className="header-solid h-full"
+          bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
+        >
+          <Table dataSource={dataSource2} columns={columns2} rowKey={(record) => record.key} />
+        </Card>
+      </Col>
+    </Row> */}
+     <Row gutter={[24, 24]}>
+      <Col span={24}>
+        <Collapse accordion>
+          <Panel header={<h6 className="font-semibold m-0">Associated Team Members</h6>} key="1">
+            <Card bordered={false} className="header-solid h-full">
+              <Table dataSource={dataSource} columns={columns} rowKey={(record) => record.id} />
+            </Card>
+          </Panel>
+          <Panel header={<h6 className="font-semibold m-0">Other Members</h6>} key="2">
+            <Card bordered={false} className="header-solid h-full">
+              <Table dataSource={dataSource2} columns={columns2} rowKey={(record) => record.key} />
+            </Card>
+          </Panel>
+        </Collapse>
+      </Col>
+    </Row>
         </>
       )}
     </>

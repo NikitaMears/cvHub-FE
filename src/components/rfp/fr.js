@@ -10,7 +10,7 @@ import { NavLink } from "react-router-dom";
 function RFPFR() {
   const [fileList, setFileList] = useState([]);
   const { id } = useParams(); 
-  const { data: irData, loading, postFormData } = useFetchWithToken(`irs/rfp/${id}`); // Fetch firm details using useFetchWithToken hook
+  const { data: irData, loading, postFormData } = useFetchWithToken(`frs/rfp/${id}`); // Fetch firm details using useFetchWithToken hook
 console.log("ird", irData)
 
   const docs2 = [
@@ -86,7 +86,7 @@ console.log("ird", irData)
               <Card bordered={false} className="header-solid h-full">
                 {irData && irData.file && (
                   <>
-                    <h4>IR Preview:</h4>
+                    <h4>FR Preview:</h4>
                     {irData.file.endsWith('.pdf') ? (
                       // If PDF file, render the iframe for preview
                       <iframe title="Firm Experience" src={`http://localhost:3001/${irData.file}`} style={{ width: "100%", height: "400px" }}></iframe>

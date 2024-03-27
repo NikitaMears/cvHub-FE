@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Modal, Form, Select, Input, message, Row, Col } from 'antd';
+import { Button, Table, Modal, Form, Select, Input, message, Row, Col, Tooltip } from 'antd';
 import useFetchWithToken from '../../services/api'; // Import the useFetchWithToken hook
 import axios from 'axios';
 
@@ -92,7 +92,15 @@ const CvProjects = ({ cvId }) => {
   
 
   const columns = [
-    { title: 'Project Title', dataIndex: ['associatedProjectInfo', 'title'], key: 'title' },
+
+
+    // { title: 'Project Title', dataIndex: ['associatedProjectInfo', 'title'], key: 'title' },
+
+    {
+      title: 'Project Title',
+      dataIndex: ['associatedProjectInfo', 'title'],      key: 'title',
+      render: (text) => <Tooltip title={text}>{text.length > 15 ? `${text.substring(0, 30)}...` : text}</Tooltip>
+    },
     { title: 'Position', dataIndex: ['cvProjectInfo', 'position'], key: 'position' },
     { title: 'Knowledge', dataIndex: ['cvProjectInfo', 'knowledgeOfWork'], key: 'knowledgeOfWork' },
 

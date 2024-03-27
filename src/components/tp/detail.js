@@ -10,7 +10,7 @@ function TpDetail() {
   const { id } = useParams();
   console.log("khkjh", id)
   const docs2 = [
-    { uri: "https://docs.google.com/document/d/1tl99rMUJauJCwGzkQvjIiKnLDgp7XSUl/export?format=docx", fileType:"docx", fileName:"demo.docx" },
+    { uri: "https://docs.google.com/document/d/1eia8mVXcNdIGiYC6yTnJuqyRI3F45LmjF1qvUt0VLkc/export?format=docx", fileType:"docx", fileName:"demo.docx" },
   //  { uri: require("./example-files/pdf.pdf") }, // Local File
   ];
   const { data: tpData, loading, error, postFormData } = useFetchWithToken(`tps/${id}`);

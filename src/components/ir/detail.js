@@ -16,11 +16,11 @@ function IRDetail() {
   };
   const [fileList, setFileList] = useState([]);
   const { id } = useParams(); 
-  const { data: irData, loading, postFormData } = useFetchWithToken(`frs/${id}`); // Fetch firm details using useFetchWithToken hook
+  const { data: irData, loading, postFormData } = useFetchWithToken(`irs/${id}`); // Fetch firm details using useFetchWithToken hook
 console.log("ird", irData)
 
   const docs2 = [
-    { uri: "https://docs.google.com/document/d/1tl99rMUJauJCwGzkQvjIiKnLDgp7XSUl/export?format=docx", fileType:"docx", fileName:"demo.docx" },
+    { uri: "https://docs.google.com/document/d/1hspba9BzQCUfodTdHLCUqELdZKaMTFr7/export?format=docx", fileType:"docx", fileName:"demo.docx" },
   //  { uri: require("./example-files/pdf.pdf") }, // Local File
   ];
 
