@@ -94,12 +94,15 @@ const CvProjects = ({ cvId }) => {
   const columns = [
     { title: 'Project Title', dataIndex: ['associatedProjectInfo', 'title'], key: 'title' },
     { title: 'Position', dataIndex: ['cvProjectInfo', 'position'], key: 'position' },
-    { title: 'Knowledge Of Work', dataIndex: ['cvProjectInfo', 'knowledgeOfWork'], key: 'knowledgeOfWork' },
+    { title: 'Knowledge', dataIndex: ['cvProjectInfo', 'knowledgeOfWork'], key: 'knowledgeOfWork' },
 
-    { title: 'Quality Of Work', dataIndex: ['cvProjectInfo', 'qualityOfWork'], key: 'qualityOfWork' },
-    { title: 'Decision Making', dataIndex: ['cvProjectInfo', 'decisionMaking'], key: 'decisionMaking' },
-    { title: 'Meeting Deadline', dataIndex: ['cvProjectInfo', 'meetingDeadline'], key: 'meetingDeadline' },
-    { title: 'Project Average', dataIndex: ['cvProjectInfo', 'points'], key: 'points' },
+    { title: 'Quality', dataIndex: ['cvProjectInfo', 'qualityOfWork'], key: 'qualityOfWork' },
+    { title: 'Deadline', dataIndex: ['cvProjectInfo', 'meetingDeadline'], key: 'meetingDeadline' },
+    { title: 'Availablity', dataIndex: ['cvProjectInfo', 'decisionMaking'], key: 'decisionMaking' },
+
+    { title: 'Affordablity', dataIndex: ['cvProjectInfo', 'planning'], key: 'planning' },
+
+    { title: 'Average', dataIndex: ['cvProjectInfo', 'points'], key: 'points' },
 
   ];
 
@@ -175,9 +178,9 @@ const CvProjects = ({ cvId }) => {
             </Col>
             <Col span={12}>
               <Form.Item
-                label="Planning"
+                label="Affordablity"
                 name="planning"
-                rules={[{ required: true, message: 'Please enter planning' }]}
+                rules={[{ required: true, message: 'Please enter Affordablity' }]}
               >
                 <Input type="number" max={5} min={1} />
               </Form.Item>
@@ -186,9 +189,9 @@ const CvProjects = ({ cvId }) => {
           <Row gutter={[16, 16]}>
             <Col span={12}>
               <Form.Item
-                label="Decision Making"
+                label="Availablity"
                 name="decisionMaking"
-                rules={[{ required: true, message: 'Please enter decision making' }]}
+                rules={[{ required: true, message: 'Please enter Availablity' }]}
               >
                 <Input type="number" max={5} min={1} />
               </Form.Item>

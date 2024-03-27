@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Card, Upload, message, Input, Row, Col, Button, Modal, Checkbox, Dropdown } from "antd";
 import { NavLink } from "react-router-dom";
-import { ToTopOutlined, SearchOutlined, EditOutlined, DeleteOutlined ,DownOutlined} from "@ant-design/icons";
+import { ToTopOutlined, SearchOutlined, EditOutlined, DeleteOutlined, DownOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import useFetchWithToken from "../../services/api";
 import moment from "moment";
 import CreateTp from "./create"; // Import the CreateTp form
@@ -64,12 +64,45 @@ function TpList() {
     const handleChange = (checkedValues) => {
       onChange(checkedValues);
     };
-  
+
     return (
       <Checkbox.Group options={columns} defaultValue={selectedColumns} onChange={handleChange} />
     );
   };
-  
+
+  // const DynamicTable = ({ columns: initialColumns, data }) => {
+  //   const defaultDisplayedColumns = initialColumns.map(column => column.key).slice(0, 7); // Select first two columns by default
+  //   const [displayedColumns, setDisplayedColumns] = useState(defaultDisplayedColumns);
+
+  //   const handleColumnChange = (selectedColumns) => {
+  //     setDisplayedColumns(selectedColumns);
+  //   };
+
+  //   const filteredColumns = initialColumns.filter(column => displayedColumns.includes(column.key));
+
+  //   return (
+  //     <>
+  //       <Dropdown
+  //         overlay={
+  //           <ColumnSelector
+  //             columns={initialColumns.map((column) => ({
+  //               label: column.title,
+  //               value: column.key,
+  //             }))}
+  //             selectedColumns={defaultDisplayedColumns}
+  //             onChange={handleColumnChange}
+  //           />
+  //         }
+  //         trigger={["click"]}
+  //       >
+  //         <Button>
+  //           Select Columns <DownOutlined />
+  //         </Button>
+  //       </Dropdown>
+  //       <Table columns={filteredColumns} dataSource={data} />
+  //     </>
+  //   );
+  // };
   const DynamicTable = ({ columns: initialColumns, data }) => {
     const defaultDisplayedColumns = initialColumns.map(column => column.key).slice(0, 7); // Select first two columns by default
     const [displayedColumns, setDisplayedColumns] = useState(defaultDisplayedColumns);
@@ -99,7 +132,7 @@ function TpList() {
             Select Columns <DownOutlined />
           </Button>
         </Dropdown>
-        <Table columns={filteredColumns} dataSource={data} />
+        <Table columns={filteredColumns} dataSource={data} pagination={{ pageSize: 5 }} className="ant-border-space" />
       </>
     );
   };
@@ -139,7 +172,7 @@ function TpList() {
         query: searchQuery
       });
       console.log('Search Results:', response.data);
-setTPData(response.data)      // Handle search results here
+      setTPData(response.data)      // Handle search results here
     } catch (error) {
       console.error('Error:', error);
     }
@@ -203,6 +236,7 @@ setTPData(response.data)      // Handle search results here
         render: (text) => highlightMatchedText(text, searchQuery),
       },
     ] : []),
+
     {
       title: "Actions",
       key: "actions",
@@ -214,33 +248,34 @@ setTPData(response.data)      // Handle search results here
           {/* <Button type="link" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record)}>
             Delete
           </Button> */}
-          <NavLink to={`/tpDetails/${record.id}`}>Details</NavLink>
+          <NavLink to={`/tpDetails/${record.id}`} style={{ color: 'green' }}>             <InfoCircleOutlined /> &nbsp;Details
+            </NavLink>
         </>
       ),
     },
   ];
-  
+
 
   return (
     <div className="tabled">
-            <Row gutter={[24, 0]}>
-            <Col span={12}>
-            <Button type="primary" onClick={() => setShowCreateModal(true)}>Add New TP</Button>
-
-              </Col>
-              <Col span={12}>
-                <Search
-                  placeholder="Search"
-                  allowClear
-                  enterButton={<SearchOutlined />}
-                  size="large"
-                  onSearch={handleSearch}
-                  onChange={e => setSearchQuery(e.target.value)}
-                />
-              </Col>
-</Row>
       <Row gutter={[24, 0]}>
-        
+        <Col span={12}>
+          <Button type="primary" onClick={() => setShowCreateModal(true)}>Add New TP</Button>
+
+        </Col>
+        <Col span={12}>
+          <Search
+            placeholder="Search"
+            allowClear
+            enterButton={<SearchOutlined />}
+            size="large"
+            onSearch={handleSearch}
+            onChange={e => setSearchQuery(e.target.value)}
+          />
+        </Col>
+      </Row>
+      <Row gutter={[24, 0]}>
+
         <Col xs={24} xl={24}>
           {/* <Button type="primary" onClick={() => setShowCreateModal(true)}>Add New TP</Button> */}
           <Card>
@@ -251,7 +286,7 @@ setTPData(response.data)      // Handle search results here
                 pagination={{ pageSize: 5 }}
                 className="ant-border-space"
               /> */}
-                            <DynamicTable columns={columns} data={tpsData} pagination={{ pageSize: 5 }} className="ant-border-space" />
+              <DynamicTable columns={columns} data={tpsData} pagination={{ pageSize: 5 }} className="ant-border-space" />
 
             </div>
           </Card>
@@ -278,7 +313,7 @@ setTPData(response.data)      // Handle search results here
             <Modal
               title={editMode ? "Edit TP" : "Create New TP"}
               visible={showCreateModal}
-                      width={800} // Adjust the width here as needed
+              width={800} // Adjust the width here as needed
 
               onCancel={() => {
                 setShowCreateModal(false);
@@ -287,21 +322,21 @@ setTPData(response.data)      // Handle search results here
               footer={null}
             >
 
-{editMode ? (
-              <EditTp
+              {editMode ? (
+                <EditTp
+                  formData={editData}
+                  setFormData={editData}
+                  closeModal={() => setShowCreateModal(false)}
+                  refetchData={refetchData}
+                  width={800} // Adjust the width here as needed
+
+                />
+              ) : <CreateTp
                 formData={editData}
-                setFormData={editData}
+                setFormData={setEditData}
                 closeModal={() => setShowCreateModal(false)}
                 refetchData={refetchData}
-                        width={800} // Adjust the width here as needed
-
-              />
-              ):<CreateTp
-              formData={editData}
-              setFormData={setEditData}
-              closeModal={() => setShowCreateModal(false)}
-              refetchData={refetchData}
-            />}
+              />}
 
 
             </Modal>

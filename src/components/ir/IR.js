@@ -3,21 +3,46 @@ import { Card, Row, Col, message,Input, Button, Table, Modal,Upload , Checkbox, 
 import { PlusOutlined,SearchOutlined, EditOutlined, DeleteOutlined, InfoCircleOutlined , ToTopOutlined, DownOutlined} from '@ant-design/icons';
 import IRForm from './irForm'; // Import the ProjectForm component
 import useFetchWithToken from '../../services/api';
+import axios from 'axios';
 import { NavLink } from "react-router-dom";
 const { Search } = Input;
+function highlightMatchedText(text, query) {
+  if (!text || !query || query.trim() === '') return text;
 
+  const index = text.toLowerCase().indexOf(query.toLowerCase());
+  if (index === -1) return text;
+
+  const maxLength = 50; // Adjust the number of characters to display before and after the highlighted text
+  const startIndex = Math.max(0, index - maxLength);
+  const endIndex = Math.min(text.length, index + query.length + maxLength);
+
+  const prefix = startIndex > 0 ? '...' : '';
+  const suffix = endIndex < text.length ? '...' : '';
+
+  const highlightedText = text.substring(startIndex, endIndex)
+    .replace(new RegExp(query, 'gi'), (match) => `<span style="background-color: yellow">${match}</span>`);
+
+  return (
+    <span dangerouslySetInnerHTML={{ __html: prefix + highlightedText + suffix }} />
+  );
+}
 const IR = () => {
   const [irModalVisible, setProjectModalVisible] = useState(false);
   const [formData, setFormData] = useState({});
-  const { data: irData, loading, error, refetchData } = useFetchWithToken('irs');
   const { data: cvData,postFormData } = useFetchWithToken("irs");
   const [uploading, setUploading] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([]); // Add state for selected columns
   const defaultSelectedColumns = [ 'title', 'rfpNo',  'content', 'actions']; // Default selected columns
+  const [irData, setIrData, loading, error, refetchData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     setSelectedColumns(defaultSelectedColumns);
   }, []);
+  useEffect(() => {
+    fetchData(); // Fetch data when component mounts
+  }, []);
+
   const handleAddProject = () => {
     setFormData({});
     setProjectModalVisible(true);
@@ -89,6 +114,27 @@ const IR = () => {
     setProjectModalVisible(false);
   };
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/irs");
+      setIrData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const handleSearch = async () => {
+    try {
+      const response = await axios.post(`http://localhost:3001/irs/search`, {
+        query: searchQuery
+      });
+      console.log('Search Results:', response.data);
+      setIrData(response.data); // Handle search results here
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   const irColumns = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
     {
@@ -96,34 +142,74 @@ const IR = () => {
       dataIndex: 'title',
       key: 'title',
       ...getColumnSearchProps('title'),
-      render: (text) => <Tooltip title={text}>{text.length > 50 ? `${text.substring(0, 50)}...` : text}</Tooltip>
+      render: (text) => <Tooltip title={text}>{text.length > 15 ? `${text.substring(0, 30)}...` : text}</Tooltip>
     },
     {
       title: 'RFP No.',
       dataIndex: 'rfpNo',
       key: 'rfpNo',
       ...getColumnSearchProps('rfpNo'),
-      render: (text) => <Tooltip title={text}>{text.length > 50 ? `${text.substring(0, 20)}...` : text}</Tooltip>
+      render: (text) => <Tooltip title={text}>{text.length > 15 ? `${text.substring(0, 30)}...` : text}</Tooltip>
     },
-      {
+    {
       title: 'Content',
       dataIndex: 'content',
       key: 'content',
       ...getColumnSearchProps('content'),
-      render: (text) => <Tooltip title={text}>{text.length > 50 ? `${text.substring(0, 50)}...` : text}</Tooltip>
+      render: (text) => {
+        const truncatedText = text.length > 80 ? `${text.substring(0, 80)}...` : text;
+        return highlightMatchedText(truncatedText, searchQuery);
+      },
     },
+    
     {
       title: 'Actions',
       key: 'actions',
       render: (_, record) => (
         <>
           <Button type="link" icon={<EditOutlined />} onClick={() => handleEditProject(record)} style={{ marginRight: 8 }}>Edit</Button>
-          {/* <Button type="link" danger icon={<DeleteOutlined />} onClick={() => handleDeleteProject(record.id)} style={{ marginRight: 8 }}>Delete</Button> */}
           <Button type="link"><NavLink to={`/irDetails/${record.id}`} style={{ color: 'green' }}><InfoCircleOutlined /> &nbsp;Details</NavLink></Button>
+          {/* <Button type="link" danger icon={<DeleteOutlined />} onClick={() => handleDeleteProject(record.id)} style={{ marginRight */}
+          {/* Return any additional actions/buttons */}
         </>
       ),
     },
   ];
+  // const irColumns = [
+  //   { title: 'ID', dataIndex: 'id', key: 'id' },
+  //   {
+  //     title: 'Title',
+  //     dataIndex: 'title',
+  //     key: 'title',
+  //     ...getColumnSearchProps('title'),
+  //     render: (text) => <Tooltip title={text}>{text.length > 50 ? `${text.substring(0, 50)}...` : text}</Tooltip>
+  //   },
+  //   {
+  //     title: 'RFP No.',
+  //     dataIndex: 'rfpNo',
+  //     key: 'rfpNo',
+  //     ...getColumnSearchProps('rfpNo'),
+  //     render: (text) => <Tooltip title={text}>{text.length > 50 ? `${text.substring(0, 20)}...` : text}</Tooltip>
+  //   },
+  //     {
+  //     title: 'Content',
+  //     dataIndex: 'content',
+  //     key: 'content',
+  //     ...getColumnSearchProps('content'),
+  //     render: (text) => <Tooltip title={text}>{text.length > 50 ? `${text.substring(0, 50)}...` : text}</Tooltip>
+  //   },
+  //   {
+  //     title: 'Actions',
+  //     key: 'actions',
+  //     render: (_, record) => (
+  //       <>
+  //         <Button type="link" icon={<EditOutlined />} onClick={() => handleEditProject(record)} style={{ marginRight: 8 }}>Edit</Button>
+  //         <Button type="link" danger icon={<DeleteOutlined />} onClick={() => handleDeleteProject(record.id)} style={{ marginRight: 8 }}>Delete</Button>
+  //         <Button type="link"><NavLink to={`/irDetails/${record.id}`} style={{ color: 'green' }}><InfoCircleOutlined /> &nbsp;Details</NavLink></Button>
+  //       </>
+  //     ),
+  //   },
+  // ];
   const ColumnSelector = () => (
     <Checkbox.Group
       options={irColumns.map(column => ({ label: column.title, value: column.key }))}
@@ -146,12 +232,26 @@ const IR = () => {
   return (
     <div>
       <Card>
+      <Row gutter={[24, 0]}>
+        <Col span={12}>
+          <Button type="primary" onClick={() => setProjectModalVisible(true)}>Add IR</Button>
+        </Col>
+        <Col span={12}>
+          <Search
+            placeholder="Search IR"
+            allowClear
+            enterButton={<SearchOutlined />}
+            onSearch={handleSearch}
+            onChange={e => setSearchQuery(e.target.value)}
+          />
+        </Col>
+      </Row>
         <Row gutter={[16, 16]}>
-          <Col span={12}>
+          {/* <Col span={12}>
             <Button type="primary" icon={<PlusOutlined />} onClick={handleAddProject}>
               Add IR
             </Button>
-          </Col>
+          </Col> */}
           
           <Col span={24}>
             {error && <div>Error: {error}</div>}

@@ -313,18 +313,13 @@ console.log(editMode)
       title: "Action",
       key: "action",
       render: (text, record) => (
-        <Button type="link" icon={<EditOutlined />} onClick={() => handleEdit(record)}>Edit</Button>
+        <>
+          <Button type="link" icon={<EditOutlined />} onClick={() => handleEdit(record)}>Edit</Button>
+          <NavLink to={`/rfpDetails/${record.id}`} style={{ color: 'green' }}>
+            <InfoCircleOutlined /> &nbsp;Details
+          </NavLink>
+        </>
       )
-    },
-    {
-      title: 'More',
-      key: 'more',
-      dataIndex: 'id',
-      render: (text, record) => (
-        <NavLink to={`/rfpDetails/${record.id}`} style={{ color: 'green' }}>
-          <InfoCircleOutlined /> &nbsp;Details
-        </NavLink>
-      ),
     }
   ];
   

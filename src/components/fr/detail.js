@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Card, Upload, message, Descriptions, Button, Tag, Table } from "antd";
+import { Row, Col, Card, Upload, message, Descriptions, Button, Tag, Table,Collapse } from "antd";
 import { useParams } from "react-router-dom";
 import { Avatar } from 'antd';
 import { UserOutlined, ToTopOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import useFetchWithToken from '../../services/api'; // Import the useFetchWithToken hook
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { NavLink } from "react-router-dom";
+const { Panel } = Collapse;
 
 function FRDetail() {
+  const [collapsed, setCollapsed] = useState(false);
+
+  const handleCollapse = () => {
+    setCollapsed(!collapsed);
+  };
   const [fileList, setFileList] = useState([]);
   const { id } = useParams(); 
   const { data: irData, loading, postFormData } = useFetchWithToken(`irs/${id}`); // Fetch firm details using useFetchWithToken hook
@@ -128,19 +134,27 @@ console.log("ird", irData)
           </Row>
           {/* Summary */}
           <Row gutter={[24, 0]}>
-            <Col span={24} md={24} className="mb-24">
-              <Card
-                bordered={false}
-                title={<h6 className="font-semibold m-0">Content</h6>}
-                className="header-solid h-full"
-                bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
-              >
-                <p className="text-dark">
-                  {irData && irData.content}
-                </p>
-              </Card>
-            </Col>
-          </Row>
+      <Col span={24} md={24} className="mb-24">
+        <Collapse
+          accordion
+          bordered={false}
+          activeKey={collapsed ? '1' : null}
+          onChange={handleCollapse}
+        >
+          <Panel header={<h6 className="font-semibold m-0">Content</h6>} key="1">
+            <Card
+              bordered={false}
+              className="header-solid h-full"
+              bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
+            >
+              <p className="text-dark">
+                {irData && irData.content}
+              </p>
+            </Card>
+          </Panel>
+        </Collapse>
+      </Col>
+    </Row>
           {/* Associated Projects */}
          
         </>
